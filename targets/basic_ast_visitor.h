@@ -95,6 +95,9 @@ public:
 	/*Novos nodes*/
 public:
 	virtual void do_repeat_node(pwn::repeat_node * const node, int lvl) = 0;
+	virtual void do_stop_node(pwn::stop_node * const node, int lvl) = 0;
+	
+
 };
 
 #endif

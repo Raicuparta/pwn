@@ -266,11 +266,8 @@ void pwn::postfix_writer::do_if_else_node(cdk::if_else_node * const node, int lv
 
 
 void pwn::postfix_writer::do_repeat_node(pwn::repeat_node * const node, int lvl) {
-  int lbl1, lbl2;
-  _pf.LABEL(mklbl(lbl1 = ++_lbl));
-  node->condition()->accept(this, lvl);
-  _pf.JZ(mklbl(lbl2 = ++_lbl));
-  node->block()->accept(this, lvl + 2);
-  _pf.JMP(mklbl(lbl1));
-  _pf.LABEL(mklbl(lbl2));
+  //TODO
+}
+void pwn::postfix_writer::do_stop_node(pwn::stop_node * const node, int lvl) {
+  //TODO
 }

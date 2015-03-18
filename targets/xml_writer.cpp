@@ -184,12 +184,9 @@ void pwn::xml_writer::do_if_else_node(cdk::if_else_node * const node, int lvl) {
 
 
 void pwn::xml_writer::do_repeat_node(pwn::repeat_node * const node, int lvl) {
-  openTag(node, lvl);
-  openTag("condition", lvl + 2);
-  node->condition()->accept(this, lvl + 4);
-  closeTag("condition", lvl + 2);
-  openTag("block", lvl + 2);
-  node->block()->accept(this, lvl + 4);
-  closeTag("block", lvl + 2);
-  closeTag(node, lvl);
+  //TODO
+}
+
+void pwn::xml_writer::do_stop_node(pwn::stop_node * const node, int lvl) {
+  //TODO
 }

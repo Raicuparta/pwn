@@ -80,7 +80,7 @@ namespace pwn {
     void do_assignment_node(pwn::assignment_node * const node, int lvl);
 		
 /*Novos nodes*/
-	
+	public:
 		void do_repeat_node(pwn::repeat_node * const node, int lvl);
 		
   };

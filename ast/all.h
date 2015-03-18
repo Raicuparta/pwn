@@ -33,8 +33,9 @@ class lvalue_node;
 class print_node; 
 class program_node; 
 class read_node; 
-class rvalue_node; 
 class repeat_node; 
+class rvalue_node; 
+class stop_node; 
 
 } // namespace pwn
 
@@ -86,8 +87,9 @@ class repeat_node;
 #include "ast/print_node.h"
 #include "ast/program_node.h"
 #include "ast/read_node.h"
-#include "ast/rvalue_node.h"
 #include "ast/repeat_node.h"
+#include "ast/rvalue_node.h"
+#include "ast/stop_node.h"
 
 
 //---------------------------------------------------------------------------

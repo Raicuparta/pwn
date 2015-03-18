@@ -162,4 +162,7 @@ void pwn::type_checker::do_if_else_node(cdk::if_else_node * const node, int lvl)
 void pwn::type_checker::do_repeat_node(pwn::repeat_node * const node, int lvl) {
 	node->condition()->accept(this, lvl + 4);
 }
-		
+
+void pwn::type_checker::do_stop_node(pwn::stop_node * const node, int lvl) {
+  node->argument()->accept(this, lvl + 2);
+}
