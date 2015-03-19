@@ -164,5 +164,13 @@ void pwn::type_checker::do_repeat_node(pwn::repeat_node * const node, int lvl) {
 }
 
 void pwn::type_checker::do_stop_node(pwn::stop_node * const node, int lvl) {
-  node->argument()->accept(this, lvl + 2);
+  node->value()->accept(this, lvl + 2);
+}
+
+void pwn::type_checker::do_and_node(pwn::and_node * const node, int lvl) {
+  processBinaryExpression(node, lvl);
+}
+
+void pwn::type_checker::do_or_node(pwn::or_node * const node, int lvl) {
+  processBinaryExpression(node, lvl);
 }

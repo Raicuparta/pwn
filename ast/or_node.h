@@ -23,7 +23,7 @@ namespace pwn {
      * @param sp semantic processor visitor
      * @param level syntactic tree level
      */
-    void accept(cdk::basic_ast_visitor *sp, int level) {
+    void accept(basic_ast_visitor *sp, int level) {
       sp->do_or_node(this, level);
     }
 

@@ -7,8 +7,8 @@ namespace pwn {
 
   class repeat_node: public cdk::basic_node {
     cdk::expression_node *_before;
-		cdk::expression_node *_condition;
-		cdk::expression_node *_after;
+	cdk::expression_node *_condition;
+	cdk::expression_node *_after;
     cdk::basic_node *_block;
 
   public:

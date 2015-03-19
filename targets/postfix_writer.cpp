@@ -271,3 +271,9 @@ void pwn::postfix_writer::do_repeat_node(pwn::repeat_node * const node, int lvl)
 void pwn::postfix_writer::do_stop_node(pwn::stop_node * const node, int lvl) {
   //TODO
 }
+void pwn::postfix_writer::do_and_node(pwn::and_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_or_node(pwn::or_node * const node, int lvl) {
+  //TODO
+}

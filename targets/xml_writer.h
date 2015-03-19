@@ -96,6 +96,8 @@ namespace pwn {
   public:
 	void do_repeat_node(pwn::repeat_node * const node, int lvl);
 	void do_stop_node(pwn::stop_node * const node, int lvl);
+	void do_and_node(pwn::and_node * const node, int lvl);
+	void do_or_node(pwn::or_node * const node, int lvl);
   };
 
 } // pwn

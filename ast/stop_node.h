@@ -7,16 +7,16 @@
 namespace pwn {
 
   class stop_node: public cdk::basic_node {
-    pwn::lvalue_node *_argument;
+    pwn::lvalue_node * _value;
 
   public:
-    inline stop_node(int lineno, pwn::lvalue_node *argument) :
-        cdk::basic_node(lineno), _argument(argument) {
+	inline stop_node(int lineno,  pwn::lvalue_node * value) :
+        cdk::basic_node(lineno), _value(value) {
     }
 
   public:
-    inline pwn::lvalue_node *argument() {
-      return _argument;
+    inline  pwn::lvalue_node * value() {
+      return _value;
     }
 
     void accept(basic_ast_visitor *sp, int level) {
