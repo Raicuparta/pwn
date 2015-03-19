@@ -38,6 +38,14 @@ class or_node;
 class rvalue_node; 
 class and_node; 
 class stop_node; 
+class return_node; 
+class local_node; 
+class import_node; 
+class identity_node; 
+class symetric_node; 
+class next_node; 
+class pointer_node; 
+class noob_node; 
 
 } // namespace pwn
 
@@ -94,6 +102,14 @@ class stop_node;
 #include "ast/rvalue_node.h"
 #include "ast/and_node.h"
 #include "ast/stop_node.h"
+#include "ast/return_node.h"
+#include "ast/local_node.h"
+#include "ast/import_node.h"
+#include "ast/identity_node.h"
+#include "ast/symetric_node.h"
+#include "ast/next_node.h"
+#include "ast/pointer_node.h"
+#include "ast/noob_node.h"
 
 
 //---------------------------------------------------------------------------

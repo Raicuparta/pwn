@@ -1,4 +1,3 @@
-// $Id: read_node.h,v 1.1 2015/02/21 20:27:31 ist13500 Exp $ -*- c++ -*-
 #ifndef __PWN_STOPNODE_H__
 #define __PWN_STOPNODE_H__
 
