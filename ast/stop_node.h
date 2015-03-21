@@ -21,9 +21,7 @@ namespace pwn {
     void accept(basic_ast_visitor *sp, int level) {
       sp->do_stop_node(this, level);
     }
-
   };
-
 } // pwn
 
 #endif

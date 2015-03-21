@@ -280,12 +280,6 @@ void pwn::postfix_writer::do_or_node(pwn::or_node * const node, int lvl) {
 void pwn::postfix_writer::do_return_node(pwn::return_node * const node, int lvl) {
   //TODO
 }
-void pwn::postfix_writer::do_local_node(pwn::local_node * const node, int lvl) {
-  //TODO
-}
-void pwn::postfix_writer::do_import_node(pwn::import_node * const node, int lvl) {
-  //TODO
-}
 void pwn::postfix_writer::do_identity_node(pwn::identity_node * const node, int lvl) {
   //TODO
 }
@@ -293,9 +287,6 @@ void pwn::postfix_writer::do_symetric_node(pwn::symetric_node * const node, int 
   //TODO
 }
 void pwn::postfix_writer::do_next_node(pwn::next_node * const node, int lvl) {
-  //TODO
-}
-void pwn::postfix_writer::do_pointer_node(pwn::pointer_node * const node, int lvl) {
   //TODO
 }
 void pwn::postfix_writer::do_noob_node(pwn::noob_node * const node, int lvl) {

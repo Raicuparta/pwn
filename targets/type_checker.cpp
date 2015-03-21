@@ -179,14 +179,6 @@ void pwn::type_checker::do_return_node(pwn::return_node * const node, int lvl) {
 	//TODO
 }
 
-void pwn::type_checker::do_local_node(pwn::local_node * const node, int lvl) {
-	//TODO
-}
-
-void pwn::type_checker::do_import_node(pwn::import_node * const node, int lvl) {
-	//TODO
-}
-
 void pwn::type_checker::do_identity_node(pwn::identity_node * const node, int lvl) {
 	//TODO
 }
@@ -195,9 +187,6 @@ void pwn::type_checker::do_symetric_node(pwn::symetric_node * const node, int lv
 	//TODO
 }
 void pwn::type_checker::do_next_node(pwn::next_node * const node, int lvl) {
-	//TODO
-}
-void pwn::type_checker::do_pointer_node(pwn::pointer_node * const node, int lvl) {
 	//TODO
 }
 void pwn::type_checker::do_noob_node(pwn::noob_node * const node, int lvl) {

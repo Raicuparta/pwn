@@ -87,12 +87,9 @@ namespace pwn {
 		void do_and_node(pwn::and_node * const node, int lvl);
 		void do_or_node(pwn::or_node * const node, int lvl);
 		void do_return_node(pwn::return_node * const node, int lvl);
-		void do_local_node(pwn::local_node * const node, int lvl);
-		void do_import_node(pwn::import_node * const node, int lvl);
 		void do_identity_node(pwn::identity_node * const node, int lvl);
 		void do_symetric_node(pwn::symetric_node * const node, int lvl);
 		void do_next_node(pwn::next_node * const node, int lvl);
-		void do_pointer_node(pwn::pointer_node * const node, int lvl);
 		void do_noob_node(pwn::noob_node * const node, int lvl);
 
 		
