@@ -112,6 +112,7 @@ public:
 	virtual void do_var_decl_node(pwn::var_decl_node * const node, int lvl) = 0;
 	virtual void do_println_node(pwn::println_node * const node, int lvl) = 0;
 	virtual void do_maloc_node(pwn::maloc_node * const node, int lvl) = 0;
+	virtual void do_mem_address_node(pwn::mem_address_node * const node, int lvl) = 0;
 
 };
 

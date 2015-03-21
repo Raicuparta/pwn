@@ -219,3 +219,6 @@ void pwn::type_checker::do_println_node(pwn::println_node * const node, int lvl)
 void pwn::type_checker::do_maloc_node(pwn::maloc_node * const node, int lvl) {
 	//TODO
 }
+void pwn::type_checker::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
+	//TODO
+}

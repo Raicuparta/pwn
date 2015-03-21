@@ -243,3 +243,6 @@ void pwn::xml_writer::do_println_node(pwn::var_decl_node * const node, int lvl) 
 void pwn::xml_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
   //TODO
 }
+void pwn::xml_writer::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
+  //TODO
+}

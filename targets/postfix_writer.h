@@ -100,6 +100,7 @@ namespace pwn {
 		void do_var_decl_node(pwn::var_decl_node * const node, int lvl);
 		void do_println_node(pwn::println_node * const node, int lvl);
 		void do_maloc_node(pwn::maloc_node * const node, int lvl);
+		void do_mem_address_node(pwn::mem_address_node * const node, int lvl);
 
 		
   };

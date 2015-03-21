@@ -319,3 +319,6 @@ void pwn::postfix_writer::do_println_node(pwn::println_node * const node, int lv
 void pwn::postfix_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
   //TODO
 }
+void pwn::postfix_writer::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
+  //TODO
+}
