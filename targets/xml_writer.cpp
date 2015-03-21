@@ -216,3 +216,30 @@ void pwn::xml_writer::do_next_node(pwn::next_node * const node, int lvl) {
 void pwn::xml_writer::do_noob_node(pwn::noob_node * const node, int lvl) {
   //TODO
 }
+void pwn::xml_writer::do_index_node(pwn::index_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_block_node(pwn::block_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_func_def_node(pwn::func_def_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_func_call_node(pwn::func_call_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_var_node(pwn::var_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_println_node(pwn::var_decl_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
+  //TODO
+}
