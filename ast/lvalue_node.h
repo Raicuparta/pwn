@@ -10,6 +10,7 @@ namespace pwn {
   /**
    * Class for describing syntactic tree leaves for holding lvalues.
    */
+  
   class lvalue_node: public cdk::simple_value_node<std::string> {
   public:
     inline lvalue_node(int lineno, const char *s) :
@@ -22,13 +23,13 @@ namespace pwn {
         cdk::simple_value_node<std::string>(lineno, *s) {
     }
     
-    inline lvalue_node(int lineno, const cdk::expression_node *e) :
-        cdk::simple_value_node<cdk::expression_node>(lineno, *e) {
+    /*inline lvalue_node(int lineno, cdk::expression_node *e) [
+        cdk::expression_node(lineno, *e);
     }
     
-	inline lvalue_node(int lineno, const pwn::index_node *i) :
-        cdk::simple_value_node<pwn::index_node>(lineno, *i) {
-    }
+	inline lvalue_node(int lineno, pwn::index_node *i) {
+        cdk::index_node(lineno, *i);
+    }*/
 
     /**
      * @param sp semantic processor visitor

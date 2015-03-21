@@ -38,14 +38,21 @@ class or_node;
 class rvalue_node; 
 class and_node; 
 class stop_node; 
-class return_node; 
-class local_node; 
-class import_node; 
+class var_decl_node; 
+class var_node; 
+class block_node; 
 class identity_node; 
-class symetric_node; 
+class maloc_node; 
 class next_node; 
-class pointer_node; 
+class func_def_node; 
 class noob_node; 
+class func_call_node; 
+class func_decl_node; 
+class index_node; 
+class mem_address_node; 
+class println_node; 
+class return_node; 
+class symetric_node; 
 
 } // namespace pwn
 
@@ -102,14 +109,21 @@ class noob_node;
 #include "ast/rvalue_node.h"
 #include "ast/and_node.h"
 #include "ast/stop_node.h"
-#include "ast/return_node.h"
-#include "ast/local_node.h"
-#include "ast/import_node.h"
+#include "ast/var_decl_node.h"
+#include "ast/var_node.h"
+#include "ast/block_node.h"
 #include "ast/identity_node.h"
-#include "ast/symetric_node.h"
+#include "ast/maloc_node.h"
 #include "ast/next_node.h"
-#include "ast/pointer_node.h"
+#include "ast/func_def_node.h"
 #include "ast/noob_node.h"
+#include "ast/func_call_node.h"
+#include "ast/func_decl_node.h"
+#include "ast/index_node.h"
+#include "ast/mem_address_node.h"
+#include "ast/println_node.h"
+#include "ast/return_node.h"
+#include "ast/symetric_node.h"
 
 
 //---------------------------------------------------------------------------

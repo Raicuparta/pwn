@@ -10,7 +10,7 @@ namespace pwn {
 	std::vector<cdk::basic_node*> _arguments;
 
   public:
-    inline func_call_node(int lineno,  cdk::string_node * name,  std::vector<cdk::basic_node*> arguments;) :
+    inline func_call_node(int lineno,  cdk::string_node * name,  std::vector<cdk::basic_node*> arguments) :
         cdk::basic_node(lineno),  _name(name), _arguments(arguments) {
     }
 

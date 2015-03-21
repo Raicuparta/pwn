@@ -237,7 +237,7 @@ void pwn::xml_writer::do_var_node(pwn::var_node * const node, int lvl) {
 void pwn::xml_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
   //TODO
 }
-void pwn::xml_writer::do_println_node(pwn::var_decl_node * const node, int lvl) {
+void pwn::xml_writer::do_println_node(pwn::println_node * const node, int lvl) {
   //TODO
 }
 void pwn::xml_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {

@@ -16,7 +16,7 @@ namespace pwn {
   
 	block_node(int lineno, var_node * vars, cdk::basic_node* instructions, block_node *block = nullptr) :
         basic_node(lineno) {
-			if (sequence != nullptr){
+			if (block != nullptr){
 				if(vars != nullptr){
 					_vars = block->nodes_vars();
 					_vars.push_back(vars);
@@ -45,7 +45,7 @@ namespace pwn {
     basic_node *node_vars(size_t i) {
       return _vars[i];
     }
-    sequence_type &nodes_vars() {
+    std::vector<var_node*> &nodes_vars() {
       return _vars;
     }
     size_t size_vars() {
@@ -55,7 +55,7 @@ namespace pwn {
      basic_node *node_instructions(size_t i) {
       return _instructions[i];
     }
-    sequence_type &nodes_instructions() {
+    std::vector<cdk::basic_node*> &nodes_instructions() {
       return _instructions;
     }
     size_t size_instructions() {

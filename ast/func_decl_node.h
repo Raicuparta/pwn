@@ -11,7 +11,7 @@ namespace pwn {
 	std::vector<cdk::basic_node*> _arguments;
 
   public:
-    inline func_decl_node(int lineno,  cdk::string_node * name,  cdk::expression_node *type, std::vector<cdk::basic_node*> arguments = nullptr) :
+    inline func_decl_node(int lineno,  cdk::string_node * name,  cdk::expression_node *type, std::vector<cdk::basic_node*> arguments) :
         cdk::basic_node(lineno),  _name(name), _type(type), _arguments(arguments) {
     }
 
