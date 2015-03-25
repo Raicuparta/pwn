@@ -1,4 +1,4 @@
-// $Id: xml_writer.cpp,v 1.1 2015/02/21 20:27:41 ist13500 Exp $ -*- c++ -*-
+// $Id: xml_writer.cpp,v 1.3 2015/03/24 14:09:47 ist173639 Exp $ -*- c++ -*-
 #include <string>
 #include "targets/xml_writer.h"
 #include "targets/type_checker.h"
@@ -110,11 +110,11 @@ void pwn::xml_writer::do_assignment_node(pwn::assignment_node * const node, int 
 
 //---------------------------------------------------------------------------
 
-void pwn::xml_writer::do_program_node(pwn::program_node * const node, int lvl) {
+/*void pwn::xml_writer::do_program_node(pwn::program_node * const node, int lvl) {
   openTag(node, lvl);
   node->statements()->accept(this, lvl + 4);
   closeTag(node, lvl);
-}
+}*/
 
 //---------------------------------------------------------------------------
 
@@ -207,12 +207,39 @@ void pwn::xml_writer::do_identity_node(pwn::identity_node * const node, int lvl)
   //TODO
 }
 
-void pwn::xml_writer::do_symetric_node(pwn::symetric_node * const node, int lvl) {
-  //TODO
-}
 void pwn::xml_writer::do_next_node(pwn::next_node * const node, int lvl) {
   //TODO
 }
 void pwn::xml_writer::do_noob_node(pwn::noob_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_index_node(pwn::index_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_block_node(pwn::block_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_func_def_node(pwn::func_def_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_func_call_node(pwn::func_call_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_var_node(pwn::var_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_println_node(pwn::println_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
+  //TODO
+}
+void pwn::xml_writer::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
   //TODO
 }

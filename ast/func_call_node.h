@@ -6,20 +6,20 @@
 namespace pwn {
 
   class func_call_node: public cdk::basic_node {
-    cdk::string_node * _name;
-	std::vector<cdk::basic_node*> _arguments;
+    cdk::identifier_node * _name;
+    cdk::sequence_node * _arguments;
 
   public:
-    inline func_call_node(int lineno,  cdk::string_node * name,  std::vector<cdk::basic_node*> arguments;) :
+    inline func_call_node(int lineno,  cdk::identifier_node * name,  cdk::sequence_node * arguments) :
         cdk::basic_node(lineno),  _name(name), _arguments(arguments) {
     }
 
   public:
-    inline cdk::string_node *name() {
+    inline cdk::identifier_node *name() {
       return _name;
     }
 
-	inline std::vector<cdk::basic_node*> arguments() {
+	inline cdk::sequence_node * arguments() {
       return _arguments;
     }
 

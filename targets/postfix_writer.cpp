@@ -1,4 +1,4 @@
-// $Id: postfix_writer.cpp,v 1.1 2015/02/21 20:27:34 ist13500 Exp $ -*- c++ -*-
+// $Id: postfix_writer.cpp,v 1.3 2015/03/24 14:09:47 ist173639 Exp $ -*- c++ -*-
 #include <string>
 #include <sstream>
 #include "targets/type_checker.h"
@@ -154,7 +154,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 
 //---------------------------------------------------------------------------
 
-void pwn::postfix_writer::do_program_node(pwn::program_node * const node, int lvl) {
+/*void pwn::postfix_writer::do_program_node(pwn::program_node * const node, int lvl) {
   // Note that Simple doesn't have functions. Thus, it doesn't need
   // a function node. However, it must start in the main function.
   // The ProgramNode (representing the whole program) doubles as a
@@ -180,7 +180,7 @@ void pwn::postfix_writer::do_program_node(pwn::program_node * const node, int lv
   _pf.EXTERN("printi");
   _pf.EXTERN("prints");
   _pf.EXTERN("println");
-}
+}*/
 
 //---------------------------------------------------------------------------
 
@@ -283,12 +283,39 @@ void pwn::postfix_writer::do_return_node(pwn::return_node * const node, int lvl)
 void pwn::postfix_writer::do_identity_node(pwn::identity_node * const node, int lvl) {
   //TODO
 }
-void pwn::postfix_writer::do_symetric_node(pwn::symetric_node * const node, int lvl) {
-  //TODO
-}
 void pwn::postfix_writer::do_next_node(pwn::next_node * const node, int lvl) {
   //TODO
 }
 void pwn::postfix_writer::do_noob_node(pwn::noob_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_index_node(pwn::index_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_block_node(pwn::block_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_func_call_node(pwn::func_call_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_var_node(pwn::var_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_println_node(pwn::println_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
+  //TODO
+}
+void pwn::postfix_writer::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
   //TODO
 }

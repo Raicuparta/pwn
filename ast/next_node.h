@@ -1,15 +1,15 @@
-#ifndef __PWN_INDEXNODE_H__
-#define __PWN_INDEXNODE_H__
+#ifndef __PWN_NEXTNODE_H__
+#define __PWN_NEXTNODE_H__
 
 #include "ast/lvalue_node.h"
 
 namespace pwn {
   
-  class index_node: public cdk::basic_node {
+  class next_node: public cdk::basic_node {
     pwn::lvalue_node * _value;
     
   public:
-    inline index_node(int lineno,  pwn::lvalue_node * value) :
+    inline next_node(int lineno,  pwn::lvalue_node * value) :
     cdk::basic_node(lineno), _value(value) {
     }
     
@@ -19,9 +19,11 @@ namespace pwn {
     }
     
     void accept(basic_ast_visitor *sp, int level) {
-      sp->do_index_node(this, level);
+      sp->do_next_node(this, level);
     }
+    
   };
+  
 } // pwn
 
 #endif

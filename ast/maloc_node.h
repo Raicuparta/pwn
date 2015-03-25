@@ -1,15 +1,18 @@
-#ifndef __PWN_INDEXNODE_H__
-#define __PWN_INDEXNODE_H__
+#ifndef __PWN_MALOCNODE_H__
+#define __PWN_MALOCNODE_H__
 
 #include "ast/lvalue_node.h"
 
+/**
+ * Class to represent memory allocation nodes
+ */
+
 namespace pwn {
-  
-  class index_node: public cdk::basic_node {
+  class maloc_node: public cdk::basic_node {
     pwn::lvalue_node * _value;
     
   public:
-    inline index_node(int lineno,  pwn::lvalue_node * value) :
+    inline maloc_node(int lineno,  pwn::lvalue_node * value) :
     cdk::basic_node(lineno), _value(value) {
     }
     
@@ -19,7 +22,7 @@ namespace pwn {
     }
     
     void accept(basic_ast_visitor *sp, int level) {
-      sp->do_index_node(this, level);
+      sp->do_maloc_node(this, level);
     }
   };
 } // pwn
