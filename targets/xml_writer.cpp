@@ -1,4 +1,4 @@
-// $Id: xml_writer.cpp,v 1.3 2015/03/24 14:09:47 ist173639 Exp $ -*- c++ -*-
+// $Id: xml_writer.cpp,v 1.4 2015/03/25 11:17:11 ist173639 Exp $ -*- c++ -*-
 #include <string>
 #include "targets/xml_writer.h"
 #include "targets/type_checker.h"
@@ -91,10 +91,10 @@ void pwn::xml_writer::do_rvalue_node(pwn::rvalue_node * const node, int lvl) {
 
 //---------------------------------------------------------------------------
 
-void pwn::xml_writer::do_lvalue_node(pwn::lvalue_node * const node, int lvl) {
+/* void pwn::xml_writer::do_lvalue_node(pwn::lvalue_node * const node, int lvl) {
   CHECK_TYPES(_compiler, _symtab, node);
   processSimple(node, lvl);
-}
+} */
 
 //---------------------------------------------------------------------------
 
@@ -243,3 +243,8 @@ void pwn::xml_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
 void pwn::xml_writer::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
   //TODO
 }
+
+void pwn::xml_writer::do_not_node(pwn::not_node * const node, int lvl){
+  //TODO
+}
+

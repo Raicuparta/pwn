@@ -1,4 +1,4 @@
-// $Id: type_checker.h,v 1.3 2015/03/24 14:09:47 ist173639 Exp $ -*- c++ -*-
+// $Id: type_checker.h,v 1.4 2015/03/25 11:17:11 ist173639 Exp $ -*- c++ -*-
 #ifndef __PWN_SEMANTICS_TYPE_CHECKER_H__
 #define __PWN_SEMANTICS_TYPE_CHECKER_H__
 
@@ -68,7 +68,7 @@ namespace pwn {
     void do_if_else_node(cdk::if_else_node * const node, int lvl);
 
   public:
-    void do_lvalue_node(pwn::lvalue_node * const node, int lvl);
+//    void do_lvalue_node(pwn::lvalue_node * const node, int lvl);
     void do_rvalue_node(pwn::rvalue_node * const node, int lvl);
 
   public:
@@ -98,6 +98,8 @@ namespace pwn {
 		void do_println_node(pwn::println_node * const node, int lvl);
 		void do_maloc_node(pwn::maloc_node * const node, int lvl);
 		void do_mem_address_node(pwn::mem_address_node * const node, int lvl);
+		void do_not_node(pwn::not_node * const node, int lvl);
+
 
   };
 

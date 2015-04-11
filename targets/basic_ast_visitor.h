@@ -1,4 +1,4 @@
-// $Id: basic_ast_visitor.h,v 1.3 2015/03/24 14:09:47 ist173639 Exp $ -*- c++ -*-
+// $Id: basic_ast_visitor.h,v 1.4 2015/03/25 11:17:11 ist173639 Exp $ -*- c++ -*-
 #ifndef __PWN_BASIC_AST_VISITOR_H__
 #define __PWN_BASIC_AST_VISITOR_H__
 
@@ -82,7 +82,7 @@ public:
   virtual void do_if_else_node(cdk::if_else_node * const node, int lvl) = 0;
 
 public:
-  virtual void do_lvalue_node(pwn::lvalue_node * const node, int lvl) = 0;
+//  virtual void do_lvalue_node(pwn::lvalue_node * const node, int lvl) = 0;
   virtual void do_rvalue_node(pwn::rvalue_node * const node, int lvl) = 0;
 
 public:
@@ -111,6 +111,8 @@ public:
 	virtual void do_println_node(pwn::println_node * const node, int lvl) = 0;
 	virtual void do_maloc_node(pwn::maloc_node * const node, int lvl) = 0;
 	virtual void do_mem_address_node(pwn::mem_address_node * const node, int lvl) = 0;
+	virtual void do_not_node(pwn::not_node * const node, int lvl) = 0;
+
 
 };
 

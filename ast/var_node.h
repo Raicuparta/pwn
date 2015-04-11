@@ -5,12 +5,12 @@
 
 namespace pwn {
   
-  class var_node: public cdk::basic_node {
+  class var_node: public lvalue_node {
     var_node * _var;
     
   public:
     inline var_node(int lineno,  var_node * var) :
-    cdk::basic_node(lineno),  _var(var) {
+    lvalue_node(lineno),  _var(var) {
     }
     
   public: 

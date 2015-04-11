@@ -5,16 +5,16 @@
 
 namespace pwn {
   
-  class index_node: public cdk::basic_node {
-    pwn::lvalue_node * _value;
+  class index_node: public lvalue_node {
+    cdk::expression_node * _value;
     
   public:
-    inline index_node(int lineno,  pwn::lvalue_node * value) :
-    cdk::basic_node(lineno), _value(value) {
+    inline index_node(int lineno,  cdk::expression_node * value) :
+    lvalue_node(lineno), _value(value) {
     }
     
   public:
-    inline  pwn::lvalue_node * value() {
+    inline  cdk::expression_node * value() {
       return _value;
     }
     

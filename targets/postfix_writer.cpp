@@ -1,4 +1,4 @@
-// $Id: postfix_writer.cpp,v 1.3 2015/03/24 14:09:47 ist173639 Exp $ -*- c++ -*-
+// $Id: postfix_writer.cpp,v 1.4 2015/03/25 11:17:11 ist173639 Exp $ -*- c++ -*-
 #include <string>
 #include <sstream>
 #include "targets/type_checker.h"
@@ -122,11 +122,11 @@ void pwn::postfix_writer::do_rvalue_node(pwn::rvalue_node * const node, int lvl)
 
 //---------------------------------------------------------------------------
 
-void pwn::postfix_writer::do_lvalue_node(pwn::lvalue_node * const node, int lvl) {
+/* void pwn::postfix_writer::do_lvalue_node(pwn::lvalue_node * const node, int lvl) {
   CHECK_TYPES(_compiler, _symtab, node);
   // simplified generation: all variables are global
   _pf.ADDR(node->value());
-}
+} */
 
 //---------------------------------------------------------------------------
 
@@ -135,7 +135,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 
   // DAVID: horrible hack!
   // (this is caused by Simple not having explicit variable declarations)
-  const std::string &id = node->lvalue()->value();
+  /* const std::string &id = node->lvalue()->value();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
   if (symbol->value() == -1) {
     _pf.DATA(); // variables are all global and live in DATA
@@ -144,7 +144,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
     _pf.CONST(0); // initialize it to 0 (zero)
     _pf.TEXT(); // return to the TEXT segment
     symbol->value(0);
-  }
+  }*/
 
   node->rvalue()->accept(this, lvl); // determine the new value
   _pf.DUP();
@@ -319,3 +319,7 @@ void pwn::postfix_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
 void pwn::postfix_writer::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
   //TODO
 }
+void pwn::postfix_writer::do_not_node(pwn::not_node * const node, int lvl) {
+  //TODO
+}
+
