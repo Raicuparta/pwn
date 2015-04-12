@@ -78,12 +78,13 @@ expr : tINTEGER                { $$ = new cdk::integer_node(LINE, $1); }
      | expr '&' expr	         { $$ = new pwn::and_node(LINE, $1, $3); }
      | expr '>' expr	         { $$ = new cdk::gt_node(LINE, $1, $3); }
      | expr tGE expr	         { $$ = new cdk::ge_node(LINE, $1, $3); }
-     | expr tLE expr           { $$ = new cdk::le_node(LINE, $1, $3); }
+     | expr tLE expr           	 { $$ = new cdk::le_node(LINE, $1, $3); }
      | expr tNE expr	         { $$ = new cdk::ne_node(LINE, $1, $3); }
-     | expr tEQ expr	         { $$ = new cdk::eq_node(LINE, $1, $3); }
-     | '(' expr ')'            { $$ = $2; }
-     | lval                    { $$ = new pwn::rvalue_node(LINE, $1); }  //FIXME
-     | lval '=' expr           { $$ = new pwn::assignment_node(LINE, $1, $3); }
+     | expr tEQ expr	       	 { $$ = new cdk::eq_node(LINE, $1, $3); }
+     | '(' expr ')'              { $$ = $2; }
+     | lval                      { $$ = new pwn::rvalue_node(LINE, $1); }  //FIXME
+     | typed ';'				 { $$ = new pwn::var_decl_node(LINE, $1); }
+     | lval '=' expr             { $$ = new pwn::assignment_node(LINE, $1, $3); }
      ;
 
 // lval : tIDENTIFIER             { $$ = new pwn::lvalue_node(LINE, $1); }

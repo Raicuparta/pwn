@@ -1,0 +1,1203 @@
+   0  $accept : list $end
+
+   1  list : stmt
+   2       | list stmt
+
+   3  stmt : expr ';'
+   4       | tPRINT expr ';'
+   5       | tREAD lval ';'
+   6       | tIF '(' expr ')' stmt
+   7       | tIF '(' expr ')' stmt tELSE stmt
+   8       | '{' list '}'
+
+   9  expr : tINTEGER
+  10       | tSTRING
+  11       | '-' expr
+  12       | expr '+' expr
+  13       | expr '-' expr
+  14       | expr '*' expr
+  15       | expr '/' expr
+  16       | expr '%' expr
+  17       | expr '<' expr
+  18       | expr '|' expr
+  19       | expr '&' expr
+  20       | expr '>' expr
+  21       | expr tGE expr
+  22       | expr tLE expr
+  23       | expr tNE expr
+  24       | expr tEQ expr
+  25       | '(' expr ')'
+  26       | lval
+  27       | lval '=' expr
+
+state 0
+	$accept : . list $end  (0)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	tIF  shift 3
+	tPRINT  shift 4
+	tREAD  shift 5
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	'{'  shift 9
+	.  error
+
+	list  goto 10
+	stmt  goto 11
+	expr  goto 12
+
+
+state 1
+	expr : tINTEGER .  (9)
+
+	.  reduce 9
+
+
+state 2
+	expr : tSTRING .  (10)
+
+	.  reduce 10
+
+
+state 3
+	stmt : tIF . '(' expr ')' stmt  (6)
+	stmt : tIF . '(' expr ')' stmt tELSE stmt  (7)
+
+	'('  shift 13
+	.  error
+
+
+state 4
+	stmt : tPRINT . expr ';'  (4)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 14
+
+
+state 5
+	stmt : tREAD . lval ';'  (5)
+
+	lval  shift 15
+	.  error
+
+
+state 6
+	expr : '-' . expr  (11)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 16
+
+
+state 7
+	expr : lval .  (26)
+	expr : lval . '=' expr  (27)
+
+	'='  shift 17
+	tGE  reduce 26
+	tLE  reduce 26
+	tEQ  reduce 26
+	tNE  reduce 26
+	'>'  reduce 26
+	'<'  reduce 26
+	'+'  reduce 26
+	'-'  reduce 26
+	'*'  reduce 26
+	'/'  reduce 26
+	'%'  reduce 26
+	';'  reduce 26
+	')'  reduce 26
+	'|'  reduce 26
+	'&'  reduce 26
+
+
+state 8
+	expr : '(' . expr ')'  (25)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 18
+
+
+state 9
+	stmt : '{' . list '}'  (8)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	tIF  shift 3
+	tPRINT  shift 4
+	tREAD  shift 5
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	'{'  shift 9
+	.  error
+
+	list  goto 19
+	stmt  goto 11
+	expr  goto 12
+
+
+state 10
+	$accept : list . $end  (0)
+	list : list . stmt  (2)
+
+	$end  accept
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	tIF  shift 3
+	tPRINT  shift 4
+	tREAD  shift 5
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	'{'  shift 9
+	.  error
+
+	stmt  goto 20
+	expr  goto 12
+
+
+state 11
+	list : stmt .  (1)
+
+	.  reduce 1
+
+
+state 12
+	stmt : expr . ';'  (3)
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	tGE  shift 21
+	tLE  shift 22
+	tEQ  shift 23
+	tNE  shift 24
+	'>'  shift 25
+	'<'  shift 26
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	';'  shift 32
+	'|'  shift 33
+	'&'  shift 34
+	.  error
+
+
+state 13
+	stmt : tIF '(' . expr ')' stmt  (6)
+	stmt : tIF '(' . expr ')' stmt tELSE stmt  (7)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 35
+
+
+state 14
+	stmt : tPRINT expr . ';'  (4)
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	tGE  shift 21
+	tLE  shift 22
+	tEQ  shift 23
+	tNE  shift 24
+	'>'  shift 25
+	'<'  shift 26
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	';'  shift 36
+	'|'  shift 33
+	'&'  shift 34
+	.  error
+
+
+state 15
+	stmt : tREAD lval . ';'  (5)
+
+	';'  shift 37
+	.  error
+
+
+16: shift/reduce conflict (shift 33, reduce 11) on '|'
+16: shift/reduce conflict (shift 34, reduce 11) on '&'
+state 16
+	expr : '-' expr .  (11)
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 11
+	tLE  reduce 11
+	tEQ  reduce 11
+	tNE  reduce 11
+	'>'  reduce 11
+	'<'  reduce 11
+	'+'  reduce 11
+	'-'  reduce 11
+	'*'  reduce 11
+	'/'  reduce 11
+	'%'  reduce 11
+	';'  reduce 11
+	')'  reduce 11
+
+
+state 17
+	expr : lval '=' . expr  (27)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 38
+
+
+state 18
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+	expr : '(' expr . ')'  (25)
+
+	tGE  shift 21
+	tLE  shift 22
+	tEQ  shift 23
+	tNE  shift 24
+	'>'  shift 25
+	'<'  shift 26
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	')'  shift 39
+	'|'  shift 33
+	'&'  shift 34
+	.  error
+
+
+state 19
+	list : list . stmt  (2)
+	stmt : '{' list . '}'  (8)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	tIF  shift 3
+	tPRINT  shift 4
+	tREAD  shift 5
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	'{'  shift 9
+	'}'  shift 40
+	.  error
+
+	stmt  goto 20
+	expr  goto 12
+
+
+state 20
+	list : list stmt .  (2)
+
+	.  reduce 2
+
+
+state 21
+	expr : expr tGE . expr  (21)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 41
+
+
+state 22
+	expr : expr tLE . expr  (22)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 42
+
+
+state 23
+	expr : expr tEQ . expr  (24)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 43
+
+
+state 24
+	expr : expr tNE . expr  (23)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 44
+
+
+state 25
+	expr : expr '>' . expr  (20)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 45
+
+
+state 26
+	expr : expr '<' . expr  (17)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 46
+
+
+state 27
+	expr : expr '+' . expr  (12)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 47
+
+
+state 28
+	expr : expr '-' . expr  (13)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 48
+
+
+state 29
+	expr : expr '*' . expr  (14)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 49
+
+
+state 30
+	expr : expr '/' . expr  (15)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 50
+
+
+state 31
+	expr : expr '%' . expr  (16)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 51
+
+
+state 32
+	stmt : expr ';' .  (3)
+
+	.  reduce 3
+
+
+state 33
+	expr : expr '|' . expr  (18)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 52
+
+
+state 34
+	expr : expr '&' . expr  (19)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	.  error
+
+	expr  goto 53
+
+
+state 35
+	stmt : tIF '(' expr . ')' stmt  (6)
+	stmt : tIF '(' expr . ')' stmt tELSE stmt  (7)
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	tGE  shift 21
+	tLE  shift 22
+	tEQ  shift 23
+	tNE  shift 24
+	'>'  shift 25
+	'<'  shift 26
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	')'  shift 54
+	'|'  shift 33
+	'&'  shift 34
+	.  error
+
+
+state 36
+	stmt : tPRINT expr ';' .  (4)
+
+	.  reduce 4
+
+
+state 37
+	stmt : tREAD lval ';' .  (5)
+
+	.  reduce 5
+
+
+38: shift/reduce conflict (shift 33, reduce 27) on '|'
+38: shift/reduce conflict (shift 34, reduce 27) on '&'
+state 38
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+	expr : lval '=' expr .  (27)
+
+	tGE  shift 21
+	tLE  shift 22
+	tEQ  shift 23
+	tNE  shift 24
+	'>'  shift 25
+	'<'  shift 26
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	';'  reduce 27
+	')'  reduce 27
+
+
+state 39
+	expr : '(' expr ')' .  (25)
+
+	.  reduce 25
+
+
+state 40
+	stmt : '{' list '}' .  (8)
+
+	.  reduce 8
+
+
+41: shift/reduce conflict (shift 33, reduce 21) on '|'
+41: shift/reduce conflict (shift 34, reduce 21) on '&'
+state 41
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr tGE expr .  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 21
+	tLE  reduce 21
+	tEQ  reduce 21
+	tNE  reduce 21
+	'>'  reduce 21
+	'<'  reduce 21
+	';'  reduce 21
+	')'  reduce 21
+
+
+42: shift/reduce conflict (shift 33, reduce 22) on '|'
+42: shift/reduce conflict (shift 34, reduce 22) on '&'
+state 42
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr tLE expr .  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 22
+	tLE  reduce 22
+	tEQ  reduce 22
+	tNE  reduce 22
+	'>'  reduce 22
+	'<'  reduce 22
+	';'  reduce 22
+	')'  reduce 22
+
+
+43: shift/reduce conflict (shift 33, reduce 24) on '|'
+43: shift/reduce conflict (shift 34, reduce 24) on '&'
+state 43
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+	expr : expr tEQ expr .  (24)
+
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 24
+	tLE  reduce 24
+	tEQ  reduce 24
+	tNE  reduce 24
+	'>'  reduce 24
+	'<'  reduce 24
+	';'  reduce 24
+	')'  reduce 24
+
+
+44: shift/reduce conflict (shift 33, reduce 23) on '|'
+44: shift/reduce conflict (shift 34, reduce 23) on '&'
+state 44
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr tNE expr .  (23)
+	expr : expr . tEQ expr  (24)
+
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 23
+	tLE  reduce 23
+	tEQ  reduce 23
+	tNE  reduce 23
+	'>'  reduce 23
+	'<'  reduce 23
+	';'  reduce 23
+	')'  reduce 23
+
+
+45: shift/reduce conflict (shift 33, reduce 20) on '|'
+45: shift/reduce conflict (shift 34, reduce 20) on '&'
+state 45
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr '>' expr .  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 20
+	tLE  reduce 20
+	tEQ  reduce 20
+	tNE  reduce 20
+	'>'  reduce 20
+	'<'  reduce 20
+	';'  reduce 20
+	')'  reduce 20
+
+
+46: shift/reduce conflict (shift 33, reduce 17) on '|'
+46: shift/reduce conflict (shift 34, reduce 17) on '&'
+state 46
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr '<' expr .  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 17
+	tLE  reduce 17
+	tEQ  reduce 17
+	tNE  reduce 17
+	'>'  reduce 17
+	'<'  reduce 17
+	';'  reduce 17
+	')'  reduce 17
+
+
+47: shift/reduce conflict (shift 33, reduce 12) on '|'
+47: shift/reduce conflict (shift 34, reduce 12) on '&'
+state 47
+	expr : expr . '+' expr  (12)
+	expr : expr '+' expr .  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 12
+	tLE  reduce 12
+	tEQ  reduce 12
+	tNE  reduce 12
+	'>'  reduce 12
+	'<'  reduce 12
+	'+'  reduce 12
+	'-'  reduce 12
+	';'  reduce 12
+	')'  reduce 12
+
+
+48: shift/reduce conflict (shift 33, reduce 13) on '|'
+48: shift/reduce conflict (shift 34, reduce 13) on '&'
+state 48
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr '-' expr .  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 13
+	tLE  reduce 13
+	tEQ  reduce 13
+	tNE  reduce 13
+	'>'  reduce 13
+	'<'  reduce 13
+	'+'  reduce 13
+	'-'  reduce 13
+	';'  reduce 13
+	')'  reduce 13
+
+
+49: shift/reduce conflict (shift 33, reduce 14) on '|'
+49: shift/reduce conflict (shift 34, reduce 14) on '&'
+state 49
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr '*' expr .  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 14
+	tLE  reduce 14
+	tEQ  reduce 14
+	tNE  reduce 14
+	'>'  reduce 14
+	'<'  reduce 14
+	'+'  reduce 14
+	'-'  reduce 14
+	'*'  reduce 14
+	'/'  reduce 14
+	'%'  reduce 14
+	';'  reduce 14
+	')'  reduce 14
+
+
+50: shift/reduce conflict (shift 33, reduce 15) on '|'
+50: shift/reduce conflict (shift 34, reduce 15) on '&'
+state 50
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr '/' expr .  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 15
+	tLE  reduce 15
+	tEQ  reduce 15
+	tNE  reduce 15
+	'>'  reduce 15
+	'<'  reduce 15
+	'+'  reduce 15
+	'-'  reduce 15
+	'*'  reduce 15
+	'/'  reduce 15
+	'%'  reduce 15
+	';'  reduce 15
+	')'  reduce 15
+
+
+51: shift/reduce conflict (shift 33, reduce 16) on '|'
+51: shift/reduce conflict (shift 34, reduce 16) on '&'
+state 51
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr '%' expr .  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	'|'  shift 33
+	'&'  shift 34
+	tGE  reduce 16
+	tLE  reduce 16
+	tEQ  reduce 16
+	tNE  reduce 16
+	'>'  reduce 16
+	'<'  reduce 16
+	'+'  reduce 16
+	'-'  reduce 16
+	'*'  reduce 16
+	'/'  reduce 16
+	'%'  reduce 16
+	';'  reduce 16
+	')'  reduce 16
+
+
+52: shift/reduce conflict (shift 21, reduce 18) on tGE
+52: shift/reduce conflict (shift 22, reduce 18) on tLE
+52: shift/reduce conflict (shift 23, reduce 18) on tEQ
+52: shift/reduce conflict (shift 24, reduce 18) on tNE
+52: shift/reduce conflict (shift 25, reduce 18) on '>'
+52: shift/reduce conflict (shift 26, reduce 18) on '<'
+52: shift/reduce conflict (shift 27, reduce 18) on '+'
+52: shift/reduce conflict (shift 28, reduce 18) on '-'
+52: shift/reduce conflict (shift 29, reduce 18) on '*'
+52: shift/reduce conflict (shift 30, reduce 18) on '/'
+52: shift/reduce conflict (shift 31, reduce 18) on '%'
+52: shift/reduce conflict (shift 33, reduce 18) on '|'
+52: shift/reduce conflict (shift 34, reduce 18) on '&'
+state 52
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr '|' expr .  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	tGE  shift 21
+	tLE  shift 22
+	tEQ  shift 23
+	tNE  shift 24
+	'>'  shift 25
+	'<'  shift 26
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	';'  reduce 18
+	')'  reduce 18
+
+
+53: shift/reduce conflict (shift 21, reduce 19) on tGE
+53: shift/reduce conflict (shift 22, reduce 19) on tLE
+53: shift/reduce conflict (shift 23, reduce 19) on tEQ
+53: shift/reduce conflict (shift 24, reduce 19) on tNE
+53: shift/reduce conflict (shift 25, reduce 19) on '>'
+53: shift/reduce conflict (shift 26, reduce 19) on '<'
+53: shift/reduce conflict (shift 27, reduce 19) on '+'
+53: shift/reduce conflict (shift 28, reduce 19) on '-'
+53: shift/reduce conflict (shift 29, reduce 19) on '*'
+53: shift/reduce conflict (shift 30, reduce 19) on '/'
+53: shift/reduce conflict (shift 31, reduce 19) on '%'
+53: shift/reduce conflict (shift 33, reduce 19) on '|'
+53: shift/reduce conflict (shift 34, reduce 19) on '&'
+state 53
+	expr : expr . '+' expr  (12)
+	expr : expr . '-' expr  (13)
+	expr : expr . '*' expr  (14)
+	expr : expr . '/' expr  (15)
+	expr : expr . '%' expr  (16)
+	expr : expr . '<' expr  (17)
+	expr : expr . '|' expr  (18)
+	expr : expr . '&' expr  (19)
+	expr : expr '&' expr .  (19)
+	expr : expr . '>' expr  (20)
+	expr : expr . tGE expr  (21)
+	expr : expr . tLE expr  (22)
+	expr : expr . tNE expr  (23)
+	expr : expr . tEQ expr  (24)
+
+	tGE  shift 21
+	tLE  shift 22
+	tEQ  shift 23
+	tNE  shift 24
+	'>'  shift 25
+	'<'  shift 26
+	'+'  shift 27
+	'-'  shift 28
+	'*'  shift 29
+	'/'  shift 30
+	'%'  shift 31
+	'|'  shift 33
+	'&'  shift 34
+	';'  reduce 19
+	')'  reduce 19
+
+
+state 54
+	stmt : tIF '(' expr ')' . stmt  (6)
+	stmt : tIF '(' expr ')' . stmt tELSE stmt  (7)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	tIF  shift 3
+	tPRINT  shift 4
+	tREAD  shift 5
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	'{'  shift 9
+	.  error
+
+	stmt  goto 55
+	expr  goto 12
+
+
+state 55
+	stmt : tIF '(' expr ')' stmt .  (6)
+	stmt : tIF '(' expr ')' stmt . tELSE stmt  (7)
+
+	tELSE  shift 56
+	$end  reduce 6
+	tINTEGER  reduce 6
+	tSTRING  reduce 6
+	tIF  reduce 6
+	tPRINT  reduce 6
+	tREAD  reduce 6
+	'-'  reduce 6
+	lval  reduce 6
+	'('  reduce 6
+	'{'  reduce 6
+	'}'  reduce 6
+
+
+state 56
+	stmt : tIF '(' expr ')' stmt tELSE . stmt  (7)
+
+	tINTEGER  shift 1
+	tSTRING  shift 2
+	tIF  shift 3
+	tPRINT  shift 4
+	tREAD  shift 5
+	'-'  shift 6
+	lval  shift 7
+	'('  shift 8
+	'{'  shift 9
+	.  error
+
+	stmt  goto 57
+	expr  goto 12
+
+
+state 57
+	stmt : tIF '(' expr ')' stmt tELSE stmt .  (7)
+
+	.  reduce 7
+
+
+State 16 contains 2 shift/reduce conflicts.
+State 38 contains 2 shift/reduce conflicts.
+State 41 contains 2 shift/reduce conflicts.
+State 42 contains 2 shift/reduce conflicts.
+State 43 contains 2 shift/reduce conflicts.
+State 44 contains 2 shift/reduce conflicts.
+State 45 contains 2 shift/reduce conflicts.
+State 46 contains 2 shift/reduce conflicts.
+State 47 contains 2 shift/reduce conflicts.
+State 48 contains 2 shift/reduce conflicts.
+State 49 contains 2 shift/reduce conflicts.
+State 50 contains 2 shift/reduce conflicts.
+State 51 contains 2 shift/reduce conflicts.
+State 52 contains 13 shift/reduce conflicts.
+State 53 contains 13 shift/reduce conflicts.
+
+
+42 terminals, 4 nonterminals
+28 grammar rules, 58 states
