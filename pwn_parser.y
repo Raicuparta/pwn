@@ -66,6 +66,9 @@
 //-- program	: tBEGIN list tEND { compiler->ast(new pwn::program_node(LINE, $2)); }
 	//--      ;
 
+file : declist 					{ compiler->ast($1); }
+		 ;
+	
 declist : decl	     			{ $$ = new cdk::sequence_node(LINE, $1); }
 		| declist decl 			{ $$ = new cdk::sequence_node(LINE, $2, $1); }
 		;
@@ -81,11 +84,13 @@ literal : tSTRING		{$$ = new cdk::string_node(LINE, $1); }
 			;	   
 			
 decl :  qualifier type var					{ $$ = new pwn::var_decl_node(LINE, $3, $2); }
-		|  qualifier func 					{ $$ = new pwn::func_def_node(LINE, $2, NULL, NULL, $1); }
-		|  qualifier func '=' literal		{ $$ = new pwn::func_def_node(LINE, $2, NULL, $4, $1); }
-		|  qualifier func block				{ $$ = new pwn::func_def_node(LINE, $2, $3, NULL, $1); }
+		|  qualifier func 					{ $$ = new pwn::func_def_node(LINE, $2, nullptr, nullptr, $1); }
+		|  qualifier func '=' literal		{ $$ = new pwn::func_def_node(LINE, $2, nullptr, $4, $1); }
+		|  qualifier func block				{ $$ = new pwn::func_def_node(LINE, $2, $3, nullptr, $1); }
 		|  qualifier func '=' literal block	{ $$ = new pwn::func_def_node(LINE, $2, $5, $4, $1); }
 		;
+		
+
 		
 qualifier: tLOCAL			{$$ = new std::string("local"); }
 			| tIMPORT			{$$ = new std::string("import"); }
@@ -95,8 +100,8 @@ qualifier: tLOCAL			{$$ = new std::string("local"); }
 var :  tIDENTIFIER		{ $$ = new pwn::var_node(LINE, $1); }	
 		;
 		
-func : ftype tIDENTIFIER '('  ')'		{ $$ = new pwn::func_decl_node(LINE, $2, $1, NULL); }
-	| ftype tIDENTIFIER 	'(' args ')'			{ $$ = new pwn::func_decl_node(LINE, $2, $1,$4 ); }
+func : type tIDENTIFIER '(' ')'		{ $$ = new pwn::func_decl_node(LINE, $2, $1, nullptr); }
+	| type tIDENTIFIER 	'(' args ')'			{ $$ = new pwn::func_decl_node(LINE, $2, $1,$4 ); }
 	;
 	
 ftype :'!'			{$$ = new basic_type(4, basic_type::TYPE_VOID); }
@@ -125,8 +130,8 @@ type : '#'				{ $$ = new basic_type(4, basic_type::TYPE_INT); }
 		
 block : '{' declist stmtlist '}'    { $$ = new pwn::block_node(LINE, $3, $2); }
 		  | '{' stmtlist '}'    { $$ = new pwn::block_node(LINE, $2); }
-		  | '{' declist '}'    { $$ = new pwn::block_node(LINE, NULL, $2); }
-		  | '{' '}'								{ $$ = new pwn::block_node(LINE, NULL); }
+		  | '{' declist '}'    { $$ = new pwn::block_node(LINE, nullptr, $2); }
+		  | '{' '}'								{ $$ = new pwn::block_node(LINE, nullptr); }
 		  
 		  //TODO ARGUMENTS
 		;
@@ -137,7 +142,7 @@ stmt : expr ';'                        							{ $$ = new pwn::evaluation_node(LI
 		| tREAD                    											{ $$ = new pwn::read_node(LINE); }
 		| tNEXT arg ';'                 										{ $$ = new pwn::next_node(LINE, $2); }
 		| tSTOP arg ';'                 										{ $$ = new pwn::stop_node(LINE, $2); }
-		| tRETURN ';'																				{ $$ = new pwn::return_node(LINE); }
+		| tRETURN																				{ $$ = new pwn::return_node(LINE); }
 		| tREPEAT '(' expr ';' expr ';' expr ')' stmt		{$$ = new pwn::repeat_node(LINE, $3, $5, $7, $9); }
 		| tIF '(' expr ')' stmt %prec tIFX 								{ $$ = new cdk::if_node(LINE, $3, $5); }
 		| tIF '(' expr ')' stmt tELSE stmt 							{ $$ = new cdk::if_else_node(LINE, $3, $5, $7); }
@@ -167,8 +172,8 @@ expr : tINTEGER                { $$ = new cdk::integer_node(LINE, $1); }
 		;
 
 lval : index		{ $$ = $1; }
-	| var			{ $$ = $1; }
-		;
+		 | var			{ $$ = $1; }
+		 ;
 		
 index : lval '[' lval ']'		{ $$ = new pwn::index_node(LINE, $1, $3); }
 			;
