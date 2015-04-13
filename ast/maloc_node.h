@@ -8,16 +8,16 @@
  */
 
 namespace pwn {
-  class maloc_node: public cdk::basic_node {
-    pwn::lvalue_node * _value;
+  class maloc_node: public cdk::expression_node {
+    int _value;
     
   public:
-    inline maloc_node(int lineno,  pwn::lvalue_node * value) :
-    cdk::basic_node(lineno), _value(value) {
+    inline maloc_node(int lineno,  int value) :
+    cdk::expression_node(lineno), _value(value) {
     }
     
   public:
-    inline  pwn::lvalue_node * value() {
+    inline int value() {
       return _value;
     }
     

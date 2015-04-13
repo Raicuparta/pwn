@@ -27,6 +27,7 @@ namespace cdk {
 //---------------------------------------------------------------------------
 
 namespace pwn {
+class var_decl_node; 
 class and_node; 
 class assignment_node; 
 class block_node; 
@@ -49,7 +50,6 @@ class repeat_node;
 class return_node; 
 class rvalue_node; 
 class stop_node; 
-class var_decl_node; 
 class var_node; 
 class not_node; 
 
@@ -97,6 +97,7 @@ class not_node;
 //     THESE ARE THE NODES DEFINED SPECIFICALLY FOR THIS APPLICATION
 //---------------------------------------------------------------------------
 
+#include "ast/var_decl_node.h"
 #include "ast/and_node.h"
 #include "ast/assignment_node.h"
 #include "ast/block_node.h"
@@ -119,7 +120,6 @@ class not_node;
 #include "ast/return_node.h"
 #include "ast/rvalue_node.h"
 #include "ast/stop_node.h"
-#include "ast/var_decl_node.h"
 #include "ast/var_node.h"
 #include "ast/not_node.h"
 

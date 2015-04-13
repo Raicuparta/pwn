@@ -10,17 +10,13 @@ namespace pwn {
    * Class for describing read nodes.
    */
   class read_node: public cdk::basic_node {
-    pwn::lvalue_node *_argument;
 
   public:
-    inline read_node(int lineno, pwn::lvalue_node *argument) :
-        cdk::basic_node(lineno), _argument(argument) {
+    inline read_node(int lineno) :
+        cdk::basic_node(lineno) {
     }
 
   public:
-    inline pwn::lvalue_node *argument() {
-      return _argument;
-    }
 
     void accept(basic_ast_visitor *sp, int level) {
       sp->do_read_node(this, level);

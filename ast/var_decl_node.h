@@ -5,20 +5,20 @@
 
 namespace pwn {
   
-  class var_decl_node: public cdk::basic_node {
-    cdk::identifier_node * _name;
-    cdk::expression_node *_type;
+  class var_decl_node: public cdk::expression_node {
+    var_node * _name;
+    basic_type *_type;
     
   public:
-    inline var_decl_node(int lineno,  cdk::identifier_node * name,  cdk::expression_node *type) :
-    cdk::basic_node(lineno),  _name(name), _type(type) {
+    inline var_decl_node(int lineno,  var_node * name,  basic_type *type) :
+    cdk::expression_node(lineno),  _name(name), _type(type) {
     }
     
   public:
-    inline cdk::identifier_node *name() {
+    inline var_node *name() {
       return _name;
     }
-    inline cdk::expression_node *type() {
+    inline basic_type *type() {
       return _type;
     }
     

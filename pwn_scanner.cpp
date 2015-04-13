@@ -461,7 +461,7 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    4,    5,    6,    1,    1,    7,    1,    1,    7,
+        1,    4,    5,    6,    7,    7,    7,    1,    1,    7,
         7,    8,    7,    1,    9,   10,   11,   12,   13,   13,
        13,   13,   13,   13,   13,   13,   13,    1,    7,   14,
        15,   16,    1,   17,   18,   18,   18,   18,   18,   18,
@@ -1070,7 +1070,7 @@ yy_push_state(X_STRING); yylval.s = new std::string("");
 case 26:
 YY_RULE_SETUP
 #line 55 "pwn_scanner.l"
-;
+; //concat
 	YY_BREAK
 case 27:
 YY_RULE_SETUP

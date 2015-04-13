@@ -52,7 +52,7 @@
 
 \"                     yy_push_state(X_STRING); yylval.s = new std::string("");
 
-<X_STRING>\"[ ]\"	   ;
+<X_STRING>\"[ ]\"	   ; //concat
 <X_STRING>\"           yy_pop_state(); return tSTRING; 
 
 <X_STRING>\\\"         *yylval.s += yytext + 1;

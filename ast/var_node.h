@@ -6,15 +6,15 @@
 namespace pwn {
   
   class var_node: public lvalue_node {
-    var_node * _var;
+    std::string * _var;
     
   public:
-    inline var_node(int lineno,  var_node * var) :
+    inline var_node(int lineno,  std::string *  var) :
     lvalue_node(lineno),  _var(var) {
     }
     
   public: 
-    inline var_node * var() {
+    inline std::string *  var() {
       return _var;
     }
     
