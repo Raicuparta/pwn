@@ -260,6 +260,16 @@ void pwn::xml_writer::do_index_node(pwn::index_node * const node, int lvl) {
 }
 void pwn::xml_writer::do_block_node(pwn::block_node * const node, int lvl) {
   //TODO
+  openTag(node, lvl);
+  openTag("block", lvl + 2);
+  openTag("vars", lvl + 2);
+  node->vars()->accept(this, lvl + 4);
+  closeTag("vars", lvl + 2);
+  openTag("instructions", lvl + 2);
+  node->instructions()->accept(this, lvl + 4);
+  closeTag("instructions", lvl + 2);
+  closeTag("block", lvl + 2);
+  closeTag(node, lvl);
 }
 void pwn::xml_writer::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
   //TODO
