@@ -8,14 +8,19 @@ namespace pwn {
   
   class block_node: public cdk::basic_node {
     
+    cdk::sequence_node * _vars;
     cdk::sequence_node * _instructions;
     
   public:
-    block_node(int lineno, cdk::sequence_node * instructions) :
-    basic_node(lineno), _instructions(instructions) {
+    block_node(int lineno, cdk::sequence_node * instructions, cdk::sequence_node * vars = nullptr) :
+    basic_node(lineno), _vars(vars), _instructions(instructions) {
     }
     
   public:
+    inline cdk::sequence_node * vars() {
+      return _vars;
+    }
+    
     inline cdk::sequence_node * instructions() {
       return _instructions;
     }
@@ -25,6 +30,7 @@ namespace pwn {
     }
     
   };
+  
   
 } // pwn
 
