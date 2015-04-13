@@ -95,8 +95,8 @@ qualifier: tLOCAL			{$$ = new std::string("local"); }
 var :  tIDENTIFIER		{ $$ = new pwn::var_node(LINE, $1); }	
 		;
 		
-func : ftype tIDENTIFIER '(' args ')'		{ $$ = new pwn::func_decl_node(LINE, $2, $1, $4); }
-	| ftype tIDENTIFIER 	'(' ')'			{ $$ = new pwn::func_decl_node(LINE, $2, $1, NULL); }
+func : ftype tIDENTIFIER '('  ')'		{ $$ = new pwn::func_decl_node(LINE, $2, $1, NULL); }
+	| ftype tIDENTIFIER 	'(' args ')'			{ $$ = new pwn::func_decl_node(LINE, $2, $1,$4 ); }
 	;
 	
 ftype :'!'			{$$ = new basic_type(4, basic_type::TYPE_VOID); }
@@ -125,7 +125,8 @@ type : '#'				{ $$ = new basic_type(4, basic_type::TYPE_INT); }
 		
 block : '{' declist stmtlist '}'    { $$ = new pwn::block_node(LINE, $3, $2); }
 		  | '{' stmtlist '}'    { $$ = new pwn::block_node(LINE, $2); }
-		  | "{}"								{ $$ = new pwn::block_node(LINE, NULL); }
+		  | '{' declist '}'    { $$ = new pwn::block_node(LINE, NULL, $2); }
+		  | '{' '}'								{ $$ = new pwn::block_node(LINE, NULL); }
 		  
 		  //TODO ARGUMENTS
 		;
