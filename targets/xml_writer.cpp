@@ -26,7 +26,7 @@ void pwn::xml_writer::do_string_node(cdk::string_node * const node, int lvl) {
 //---------------------------------------------------------------------------
 
 inline void pwn::xml_writer::processUnaryExpression(cdk::unary_expression_node * const node, int lvl) {
-  CHECK_TYPES(_compiler, _symtab, node);
+ // CHECK_TYPES(_compiler, _symtab, node);
   openTag(node, lvl);
   node->argument()->accept(this, lvl + 2);
   closeTag(node, lvl);
@@ -39,7 +39,7 @@ void pwn::xml_writer::do_neg_node(cdk::neg_node * const node, int lvl) {
 //---------------------------------------------------------------------------
 
 inline void pwn::xml_writer::processBinaryExpression(cdk::binary_expression_node * const node, int lvl) {
-  CHECK_TYPES(_compiler, _symtab, node);
+ // CHECK_TYPES(_compiler, _symtab, node);
   openTag(node, lvl);
   node->left()->accept(this, lvl + 2);
   node->right()->accept(this, lvl + 2);
@@ -83,7 +83,7 @@ void pwn::xml_writer::do_eq_node(cdk::eq_node * const node, int lvl) {
 //---------------------------------------------------------------------------
 
 void pwn::xml_writer::do_rvalue_node(pwn::rvalue_node * const node, int lvl) {
-  CHECK_TYPES(_compiler, _symtab, node);
+  //CHECK_TYPES(_compiler, _symtab, node);
   openTag(node, lvl);
   node->lvalue()->accept(this, lvl + 4);
   closeTag(node, lvl);
@@ -99,7 +99,7 @@ void pwn::xml_writer::do_rvalue_node(pwn::rvalue_node * const node, int lvl) {
 //---------------------------------------------------------------------------
 
 void pwn::xml_writer::do_assignment_node(pwn::assignment_node * const node, int lvl) {
-  CHECK_TYPES(_compiler, _symtab, node);
+ // CHECK_TYPES(_compiler, _symtab, node);
   openTag(node, lvl);
   node->lvalue()->accept(this, lvl + 2);
   openTag("rvalue", lvl + 2);
@@ -119,14 +119,14 @@ void pwn::xml_writer::do_assignment_node(pwn::assignment_node * const node, int 
 //---------------------------------------------------------------------------
 
 void pwn::xml_writer::do_evaluation_node(pwn::evaluation_node * const node, int lvl) {
-  CHECK_TYPES(_compiler, _symtab, node);
+  //CHECK_TYPES(_compiler, _symtab, node);
   openTag(node, lvl);
   node->argument()->accept(this, lvl + 2);
   closeTag(node, lvl);
 }
 
 void pwn::xml_writer::do_print_node(pwn::print_node * const node, int lvl) {
-  CHECK_TYPES(_compiler, _symtab, node);
+ // CHECK_TYPES(_compiler, _symtab, node);
   openTag(node, lvl);
   node->argument()->accept(this, lvl + 2);
   closeTag(node, lvl);
@@ -276,12 +276,12 @@ void pwn::xml_writer::do_func_decl_node(pwn::func_decl_node * const node, int lv
   //TODO
   openTag(node, lvl);
   openTag("func_decl", lvl + 2);
- // openTag("type", lvl + 2);
+  //openTag("type", lvl + 2);
   //node->type()->accept(this, lvl + 4);
- // closeTag("type", lvl + 2);
- // openTag("name", lvl + 2);
-  //node->name()->accept(this, lvl + 4);
- // closeTag("name", lvl + 2);
+  //closeTag("type", lvl + 2);
+  openTag("name", lvl + 2);
+  std::cout<< node->name()<< std::endl;
+  closeTag("name", lvl + 2);
 	
 	if (node->arguments() != nullptr) {
 		openTag("arguments", lvl + 2);
@@ -302,30 +302,35 @@ void pwn::xml_writer::do_func_def_node(pwn::func_def_node * const node, int lvl)
   openTag("func", lvl + 2);
   node->name()->accept(this, lvl + 4);
   closeTag("func", lvl + 2);
-  openTag("instructions", lvl + 2);
-  node->instructions()->accept(this, lvl + 4);
-  closeTag("instructions", lvl + 2);
-  openTag("value", lvl + 2);
-  node->value()->accept(this, lvl + 4);
-  closeTag("value", lvl + 2);
+	
+	if (node->instructions() != nullptr) {
+		openTag("instructions", lvl + 2);
+		node->instructions()->accept(this, lvl + 4);
+		closeTag("instructions", lvl + 2);		
+	}
+	if (node->value() != nullptr) {
+		openTag("value", lvl + 2);
+		node->value()->accept(this, lvl + 4);
+		closeTag("value", lvl + 2);		
+	}
   closeTag("func_def", lvl + 2);
   closeTag(node, lvl);
 }
 void pwn::xml_writer::do_func_call_node(pwn::func_call_node * const node, int lvl) {
-  //TODO
   openTag(node, lvl);
   openTag("func_call", lvl + 2);
-  openTag("name", lvl + 2);
+  /*openTag("name", lvl + 2);
   node->name()->accept(this, lvl + 4);
-  closeTag("name", lvl + 2);
-  openTag("arguments", lvl + 2);
-  node->arguments()->accept(this, lvl + 4);
-  closeTag("arguments", lvl + 2);
+  closeTag("name", lvl + 2);*/
+	if (node->arguments() != nullptr) {
+		openTag("arguments", lvl + 2);
+		node->arguments()->accept(this, lvl + 4);
+		closeTag("arguments", lvl + 2);
+	}
   closeTag("func_call", lvl + 2);
   closeTag(node, lvl);
 }
 void pwn::xml_writer::do_var_node(pwn::var_node * const node, int lvl) {
-  //TODO
   openTag(node, lvl);
  // openTag("var", lvl + 2);
  // node->var()->accept(this, lvl + 4);
@@ -333,7 +338,6 @@ void pwn::xml_writer::do_var_node(pwn::var_node * const node, int lvl) {
   closeTag(node, lvl);
 }
 void pwn::xml_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
-  //TODO
   openTag(node, lvl);
   openTag("var_decl", lvl + 2);
   //openTag("type", lvl + 2);
@@ -346,7 +350,7 @@ void pwn::xml_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl)
   closeTag(node, lvl);
 }
 void pwn::xml_writer::do_println_node(pwn::println_node * const node, int lvl) {
-  CHECK_TYPES(_compiler, _symtab, node);
+  //CHECK_TYPES(_compiler, _symtab, node);
   openTag(node, lvl);
   node->argument()->accept(this, lvl + 2);
   closeTag(node, lvl);

@@ -32,7 +32,7 @@
 %token <d> tREAL
 %token <i> tINTEGER
 %token <s> tIDENTIFIER tSTRING
-%token tIF tPRINT tREAD tBEGIN tEND tREPEAT tNEXT tSTOP
+%token tIF tREAD tBEGIN tEND tREPEAT tNEXT tSTOP
 %token tLOCAL tIMPORT tRETURN tPRINTLN
 
 %nonassoc tIFX
@@ -47,10 +47,10 @@
 %nonassoc tUNARY
 
 %type <node> stmt   
-%type <sequence> args declist stmtlist
-%type <expression> expr literal decl vardecl funcdecl
+%type <sequence> argscall argsdecl declist stmtlist
+%type <expression> expr literal decl vardecl funcdecl funcall
 %type <lvalue> lval 
-%type <btype> type ftype
+%type <btype> type
 %type <s> qualifier
 %type <var> var
 %type <func> func
@@ -94,7 +94,9 @@ funcdecl : qualifier func 					{ $$ = new pwn::func_def_node(LINE, $2, nullptr, 
 			 	 |  qualifier func '=' literal block	{ $$ = new pwn::func_def_node(LINE, $2, $5, $4, $1); }
 				 ;
 		
-
+funcall : tIDENTIFIER '(' argscall ')'			{ $$ = new pwn::func_call_node(LINE, $1, $3); }
+				| tIDENTIFIER '(' ')'								{ $$ = new pwn::func_call_node(LINE, $1, nullptr); }
+				;
 		
 qualifier: tLOCAL			{$$ = new std::string("local"); }
 			| tIMPORT			{$$ = new std::string("import"); }
@@ -105,15 +107,17 @@ var :  tIDENTIFIER		{ $$ = new pwn::var_node(LINE, $1); }
 		;
 		
 func : type tIDENTIFIER '(' ')'		{ $$ = new pwn::func_decl_node(LINE, $2, $1, nullptr); }
-	| type tIDENTIFIER 	'(' args ')'			{ $$ = new pwn::func_decl_node(LINE, $2, $1,$4 ); }
+	| type tIDENTIFIER 	'(' argsdecl ')'			{ $$ = new pwn::func_decl_node(LINE, $2, $1,$4 ); }
+	| '!' tIDENTIFIER '(' ')'		{ $$ = new pwn::func_decl_node(LINE, $2, new basic_type(4, basic_type::TYPE_VOID), nullptr); }
+	| '!' tIDENTIFIER 	'(' argsdecl ')'			{ $$ = new pwn::func_decl_node(LINE, $2, new basic_type(4, basic_type::TYPE_VOID),$4 ); }
 	;
 	
-ftype :'!'			{$$ = new basic_type(4, basic_type::TYPE_VOID); }
-		| type			{$$ = $1; }
+argsdecl : vardecl	     			{ $$ = new cdk::sequence_node(LINE, $1); }
+		| argsdecl ',' vardecl 		{ $$ = new cdk::sequence_node(LINE, $3, $1); }
 		;
-	
-args : var	     			{ $$ = new cdk::sequence_node(LINE, $1); }
-		| args ',' var 		{ $$ = new cdk::sequence_node(LINE, $3, $1); }
+
+argscall : expr	     			{ $$ = new cdk::sequence_node(LINE, $1); }
+		| argscall ',' expr 		{ $$ = new cdk::sequence_node(LINE, $3, $1); }
 		;
 		
 arg : tINTEGER	{ $$ = new cdk::integer_node(LINE, $1); }
@@ -141,13 +145,13 @@ block : '{' declist stmtlist '}'    { $$ = new pwn::block_node(LINE, $3, $2); }
 		;
 
 stmt : expr ';'                        							{ $$ = new pwn::evaluation_node(LINE, $1); }
-		| expr tPRINT		                								{ $$ = new pwn::print_node(LINE, $1); }
+		| expr '!'		                								{ $$ = new pwn::print_node(LINE, $1); }
 		| expr tPRINTLN                									{ $$ = new pwn::println_node(LINE, $1); }
 		| tREAD                    											{ $$ = new pwn::read_node(LINE); }
 		| tNEXT arg ';'                 								{ $$ = new pwn::next_node(LINE, $2); }
 		| tSTOP arg ';'                 								{ $$ = new pwn::stop_node(LINE, $2); }
 		| tRETURN																				{ $$ = new pwn::return_node(LINE); }
-		| tREPEAT '(' expr ';' expr ';' expr ')' stmt		{$$ = new pwn::repeat_node(LINE, $3, $5, $7, $9); }
+		| tREPEAT '(' expr ';' expr ';' expr ')' stmt		{ $$ = new pwn::repeat_node(LINE, $3, $5, $7, $9); }
 		| tIF '(' expr ')' stmt %prec tIFX 							{ $$ = new cdk::if_node(LINE, $3, $5); }
 		| tIF '(' expr ')' stmt tELSE stmt 							{ $$ = new cdk::if_else_node(LINE, $3, $5, $7); }
 		| block																					{ $$ = $1; }
@@ -156,7 +160,7 @@ stmt : expr ';'                        							{ $$ = new pwn::evaluation_node(LI
 expr : tINTEGER                { $$ = new cdk::integer_node(LINE, $1); }
 	| tSTRING                 { $$ = new cdk::string_node(LINE, $1); }
 		| '-' expr %prec tUNARY   { $$ = new cdk::neg_node(LINE, $2); }
-		| '~' expr 			     { $$ = new pwn::not_node(LINE, $2); }
+		| '~' expr %prec tUNARY 			     { $$ = new pwn::not_node(LINE, $2); }
 		| expr '+' expr	         { $$ = new cdk::add_node(LINE, $1, $3); }
 		| expr '-' expr	         { $$ = new cdk::sub_node(LINE, $1, $3); }
 		| expr '*' expr	         { $$ = new cdk::mul_node(LINE, $1, $3); }
@@ -176,6 +180,7 @@ expr : tINTEGER                { $$ = new cdk::integer_node(LINE, $1); }
 		| vardecl '=' expr             { $$ = new pwn::assignment_node(LINE, $1, $3); }
 		| vardecl '=' '[' tINTEGER ']' { $$ = new pwn::maloc_node(LINE, $4); }
 		| lval									{ $$ = $1; }
+		| funcall								{ $$ = $1; }
 		;
 
 lval : index		{ $$ = $1; }
