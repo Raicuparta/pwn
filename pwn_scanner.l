@@ -26,8 +26,7 @@
 
 "if"                   return tIF; 
 "else"                 return tELSE; 
-."!"                   return tPRINT; 
-."!!"                  return tPRINTLN; 
+"!!"                   return tPRINTLN; 
 "@"                    return tREAD; 
 "begin"                return tBEGIN; 
 "end"                  return tEND; 
@@ -73,7 +72,7 @@
 -?([0-9]+)?\.[0-9]+(e-?[0-9]+)?	yylval.d = strtod(yytext, nullptr); return tREAL;
 
 
-[-()<>=+*/%;{}.\[\]#$]       return *yytext;
+[-()<>=+*/%;{}.\[\]#$!]       return *yytext;
 
 [ \n\r\t]+               ; /* ignore whitespace */
 

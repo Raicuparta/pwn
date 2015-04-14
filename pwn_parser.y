@@ -48,7 +48,7 @@
 
 %type <node> stmt   
 %type <sequence> args declist stmtlist
-%type <expression> expr literal decl
+%type <expression> expr literal decl vardecl funcdecl
 %type <lvalue> lval 
 %type <btype> type ftype
 %type <s> qualifier
@@ -62,9 +62,6 @@
 //-- The rules below will be included in yyparse, the main parsing function.
 %}
 %%
-
-//-- program	: tBEGIN list tEND { compiler->ast(new pwn::program_node(LINE, $2)); }
-	//--      ;
 
 file : declist 					{ compiler->ast($1); }
 		 ;
@@ -83,12 +80,19 @@ literal : tSTRING		{$$ = new cdk::string_node(LINE, $1); }
 			|tNOOB		{$$ = new pwn::noob_node(LINE); }
 			;	   
 			
-decl :  qualifier type var					{ $$ = new pwn::var_decl_node(LINE, $3, $2); }
-		|  qualifier func 					{ $$ = new pwn::func_def_node(LINE, $2, nullptr, nullptr, $1); }
-		|  qualifier func '=' literal		{ $$ = new pwn::func_def_node(LINE, $2, nullptr, $4, $1); }
-		|  qualifier func block				{ $$ = new pwn::func_def_node(LINE, $2, $3, nullptr, $1); }
-		|  qualifier func '=' literal block	{ $$ = new pwn::func_def_node(LINE, $2, $5, $4, $1); }
+decl: vardecl 					{ $$ = $1; }
+		| funcdecl					{ $$ = $1; }
 		;
+		
+vardecl :  qualifier type var				{ $$ = new pwn::var_decl_node(LINE, $3, $2); }
+				| qualifier type var ';'				{ $$ = new pwn::var_decl_node(LINE, $3, $2); }
+			  ;
+
+funcdecl : qualifier func 					{ $$ = new pwn::func_def_node(LINE, $2, nullptr, nullptr, $1); }
+				 |  qualifier func '=' literal		{ $$ = new pwn::func_def_node(LINE, $2, nullptr, $4, $1); }
+				 |  qualifier func block				{ $$ = new pwn::func_def_node(LINE, $2, $3, nullptr, $1); }
+			 	 |  qualifier func '=' literal block	{ $$ = new pwn::func_def_node(LINE, $2, $5, $4, $1); }
+				 ;
 		
 
 		
@@ -140,11 +144,11 @@ stmt : expr ';'                        							{ $$ = new pwn::evaluation_node(LI
 		| expr tPRINT		                								{ $$ = new pwn::print_node(LINE, $1); }
 		| expr tPRINTLN                									{ $$ = new pwn::println_node(LINE, $1); }
 		| tREAD                    											{ $$ = new pwn::read_node(LINE); }
-		| tNEXT arg ';'                 										{ $$ = new pwn::next_node(LINE, $2); }
-		| tSTOP arg ';'                 										{ $$ = new pwn::stop_node(LINE, $2); }
+		| tNEXT arg ';'                 								{ $$ = new pwn::next_node(LINE, $2); }
+		| tSTOP arg ';'                 								{ $$ = new pwn::stop_node(LINE, $2); }
 		| tRETURN																				{ $$ = new pwn::return_node(LINE); }
 		| tREPEAT '(' expr ';' expr ';' expr ')' stmt		{$$ = new pwn::repeat_node(LINE, $3, $5, $7, $9); }
-		| tIF '(' expr ')' stmt %prec tIFX 								{ $$ = new cdk::if_node(LINE, $3, $5); }
+		| tIF '(' expr ')' stmt %prec tIFX 							{ $$ = new cdk::if_node(LINE, $3, $5); }
 		| tIF '(' expr ')' stmt tELSE stmt 							{ $$ = new cdk::if_else_node(LINE, $3, $5, $7); }
 		| block																					{ $$ = $1; }
 		;
@@ -168,7 +172,10 @@ expr : tINTEGER                { $$ = new cdk::integer_node(LINE, $1); }
 		| expr tEQ expr	       	 { $$ = new cdk::eq_node(LINE, $1, $3); }
 		| '(' expr ')'              { $$ = $2; }
 		| lval '=' expr             { $$ = new pwn::assignment_node(LINE, $1, $3); }
-		| lval '=' '[' tINTEGER ']' { $$ = new pwn::maloc_node(LINE, $4); } 					 					
+		| lval '=' '[' tINTEGER ']' { $$ = new pwn::maloc_node(LINE, $4); } 	
+		| vardecl '=' expr             { $$ = new pwn::assignment_node(LINE, $1, $3); }
+		| vardecl '=' '[' tINTEGER ']' { $$ = new pwn::maloc_node(LINE, $4); }
+		| lval									{ $$ = $1; }
 		;
 
 lval : index		{ $$ = $1; }

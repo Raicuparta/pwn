@@ -10,16 +10,16 @@ namespace pwn {
    * Class for describing assignment nodes.
    */
   class assignment_node: public cdk::expression_node {
-    pwn::lvalue_node *_lvalue;
+    cdk::expression_node *_lvalue;
     cdk::expression_node *_rvalue;
 
   public:
-    inline assignment_node(int lineno, pwn::lvalue_node *lvalue, cdk::expression_node *rvalue) :
+    inline assignment_node(int lineno, cdk::expression_node *lvalue, cdk::expression_node *rvalue) :
         cdk::expression_node(lineno), _lvalue(lvalue), _rvalue(rvalue) {
     }
 
   public:
-    inline pwn::lvalue_node *lvalue() {
+    inline cdk::expression_node *lvalue() {
       return _lvalue;
     }
     inline cdk::expression_node *rvalue() {
