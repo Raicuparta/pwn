@@ -1,4 +1,4 @@
-// $Id: type_checker.cpp,v 1.3 2015/03/24 14:09:47 ist173639 Exp $ -*- c++ -*-
+// $Id: type_checker.cpp,v 1.6 2015/04/14 10:00:27 ist173639 Exp $ -*- c++ -*-
 #include <string>
 #include "targets/type_checker.h"
 #include "ast/all.h"  // automatically generated
@@ -7,6 +7,13 @@
     { if (node->type() != nullptr && \
           node->type()->name() != basic_type::TYPE_UNSPEC) return; }
 
+          
+          
+bool pwn::type_checker::compareType(const basic_type::type type, const basic_type::type accepedTypes[]) {
+	return true;
+}
+          
+          
 //---------------------------------------------------------------------------
 
 void pwn::type_checker::do_integer_node(cdk::integer_node * const node, int lvl) {
@@ -22,16 +29,13 @@ void pwn::type_checker::do_string_node(cdk::string_node * const node, int lvl) {
 //---------------------------------------------------------------------------
 
 inline void pwn::type_checker::processUnaryExpression(cdk::unary_expression_node * const node, int lvl) {
-  node->argument()->accept(this, lvl + 2);
-  if (node->argument()->type()->name() != basic_type::TYPE_INT)
-    throw std::string("wrong type in argument of unary expression");
-
-  // in Simple, expressions are always int
-  node->type(new basic_type(4, basic_type::TYPE_INT));
+	node->argument()->accept(this, lvl + 2);
+  node->type(node->argument()->type());
 }
 
 void pwn::type_checker::do_neg_node(cdk::neg_node * const node, int lvl) {
-  processUnaryExpression(node, lvl);
+  ASSERT_UNSPEC;
+	processUnaryExpression(node, lvl);
 }
 
 //---------------------------------------------------------------------------
@@ -39,15 +43,25 @@ void pwn::type_checker::do_neg_node(cdk::neg_node * const node, int lvl) {
 inline void pwn::type_checker::processBinaryExpression(cdk::binary_expression_node * const node, int lvl) {
   ASSERT_UNSPEC;
   node->left()->accept(this, lvl + 2);
-  if (node->left()->type()->name() != basic_type::TYPE_INT)
-    throw std::string("wrong type in left argument of binary expression");
-
-  node->right()->accept(this, lvl + 2);
-  if (node->right()->type()->name() != basic_type::TYPE_INT)
-    throw std::string("wrong type in right argument of binary expression");
+	node->right()->accept(this, lvl + 2);
 
   // in Simple, expressions are always int
   node->type(new basic_type(4, basic_type::TYPE_INT));
+}
+
+inline void pwn::type_checker::processAddSub(cdk::binary_expression_node * const node, int lvl) {
+  ASSERT_UNSPEC;
+	basic_type* newType;
+  node->left()->accept(this, lvl + 2);
+	if (node->left()->type()->name() == basic_type::TYPE_DOUBLE)
+		newType = node->left()->type();
+	else if (node->left()->type()->name() == basic_type::TYPE_DOUBLE)
+    throw std::string("wrong type in argument of unary expression");
+
+	
+	node->right()->accept(this, lvl + 2);
+
+  node->type(newType);
 }
 
 void pwn::type_checker::do_add_node(cdk::add_node * const node, int lvl) {

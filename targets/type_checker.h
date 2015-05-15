@@ -1,4 +1,4 @@
-// $Id: type_checker.h,v 1.4 2015/03/25 11:17:11 ist173639 Exp $ -*- c++ -*-
+// $Id: type_checker.h,v 1.7 2015/04/14 10:00:27 ist173639 Exp $ -*- c++ -*-
 #ifndef __PWN_SEMANTICS_TYPE_CHECKER_H__
 #define __PWN_SEMANTICS_TYPE_CHECKER_H__
 
@@ -48,6 +48,10 @@ namespace pwn {
 
   protected:
     void processBinaryExpression(cdk::binary_expression_node * const node, int lvl);
+		void processAddSub(cdk::binary_expression_node * const node, int lvl);
+
+	protected:
+		bool compareType(const basic_type::type type, const basic_type::type accepedTypes[]);
 
   public:
     void do_add_node(cdk::add_node * const node, int lvl);

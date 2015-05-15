@@ -1,7 +1,7 @@
 %option c++ yyclass="pwn_scanner" outfile="pwn_scanner.cpp"
 %option debug stack noyywrap yylineno 8bit
 %{ 
-/* $Id: pwn_scanner.l,v 1.1 2015/02/21 20:27:27 ist13500 Exp $ */
+/* $Id: pwn_scanner.l,v 1.4 2015/04/14 10:00:27 ist173639 Exp $ */
 // make relevant includes before including the parser's tab file
 #include <string>
 #include <cdk/ast/sequence_node.h>
@@ -35,15 +35,16 @@
 "next"				   return tNEXT;
 "stop"				   return tSTOP;
 "local"				   return tLOCAL;
-"import"  	 	 	   return tIMPORT;
+"import"  	 	 	 return tIMPORT;
 "noob"				   return tNOOB;
 "return"			   return tRETURN;
 
 
 \/\/.*$						;						
 
-<INITIAL,X_COMMENT>\/\*	yy_push_state(X_COMMENT);
-<X_COMMENT>\*\/				yy_pop_state();
+"/*"									yy_push_state(X_COMMENT);
+<X_COMMENT>"/*"				yy_push_state(X_COMMENT);
+<X_COMMENT>"*/"				yy_pop_state();
 <X_COMMENT>.|\n				;
 
 
@@ -51,7 +52,7 @@
 
 \"                     yy_push_state(X_STRING); yylval.s = new std::string("");
 
-<X_STRING>\"[ ]\"	   ; //concat
+<X_STRING>\"[ \r\t]+\"	   ; //concat
 <X_STRING>\"           yy_pop_state(); return tSTRING; 
 
 <X_STRING>\\\"         *yylval.s += yytext + 1;
@@ -68,11 +69,11 @@
 0|([1-9][0-9]*)        yylval.i = strtol(yytext, nullptr, 10); return tINTEGER;
 0x[0-9a-fA-F]+		   yylval.i = strtol(yytext, nullptr, 16); return tINTEGER;
 
--?[0-9]+(\.)?([0-9]+)?e-?[0-9]+	yylval.d = strtod(yytext, nullptr); return tREAL;
--?([0-9]+)?\.[0-9]+(e-?[0-9]+)?	yylval.d = strtod(yytext, nullptr); return tREAL;
+[0-9]+(\.)?([0-9]+)?e-?[0-9]+	yylval.d = strtod(yytext, nullptr); return tREAL;
+([0-9]+)?\.[0-9]+(e-?[0-9]+)?	yylval.d = strtod(yytext, nullptr); return tREAL;
 
 
-[-()<>=+*/%;{}.\[\]#$!]       return *yytext;
+[-()<>=+*/%;{}.\[\]#$!&|]       return *yytext;
 
 [ \n\r\t]+               ; /* ignore whitespace */
 

@@ -1,1203 +1,2293 @@
-   0  $accept : list $end
+Terminals unused in grammar
 
-   1  list : stmt
-   2       | list stmt
+   tBEGIN
+   tEND
 
-   3  stmt : expr ';'
-   4       | tPRINT expr ';'
-   5       | tREAD lval ';'
-   6       | tIF '(' expr ')' stmt
-   7       | tIF '(' expr ')' stmt tELSE stmt
-   8       | '{' list '}'
 
-   9  expr : tINTEGER
-  10       | tSTRING
-  11       | '-' expr
-  12       | expr '+' expr
-  13       | expr '-' expr
-  14       | expr '*' expr
-  15       | expr '/' expr
-  16       | expr '%' expr
-  17       | expr '<' expr
-  18       | expr '|' expr
-  19       | expr '&' expr
-  20       | expr '>' expr
-  21       | expr tGE expr
-  22       | expr tLE expr
-  23       | expr tNE expr
-  24       | expr tEQ expr
-  25       | '(' expr ')'
-  26       | lval
-  27       | lval '=' expr
-
+State 20 conflicts: 1 shift/reduce
+State 34 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: file $end
+
+    1 file: declist
+
+    2 declist: decl
+    3        | declist decl
+
+    4 stmtlist: stmt
+    5         | stmtlist stmt
+
+    6 literal: tSTRING
+    7        | tREAL
+    8        | tINTEGER
+    9        | tNOOB
+
+   10 decl: vardecl
+   11     | funcdecl
+
+   12 vardecl: qualifier type var
+   13        | qualifier type var ';'
+
+   14 funcdecl: qualifier func
+   15         | qualifier func block
+   16         | qualifier func '=' literal
+   17         | qualifier func '=' literal block
+
+   18 funcall: tIDENTIFIER '(' argscall ')'
+
+   19 qualifier: tLOCAL
+   20          | tIMPORT
+   21          | /* empty */
+
+   22 var: tIDENTIFIER ';'
+
+   23 func: type tIDENTIFIER "()"
+   24     | type tIDENTIFIER '(' argsdecl ')'
+   25     | '!' tIDENTIFIER "()"
+   26     | '!' tIDENTIFIER '(' argsdecl ')'
+
+   27 argsdecl: vardecl
+   28         | argsdecl ',' vardecl
+
+   29 argscall: expr
+   30         | argscall ',' expr
+   31         | /* empty */
+
+   32 arg: tINTEGER
+   33    | /* empty */
+
+   34 type: '#'
+   35     | '%'
+   36     | '$'
+   37     | '*'
+   38     | "<#>"
+   39     | "<%>"
+   40     | "<$>"
+   41     | "<*>"
+
+   42 block: '{' declist stmtlist '}'
+   43      | '{' stmtlist '}'
+   44      | '{' declist '}'
+   45      | '{' '}'
+
+   46 stmt: expr ';'
+   47     | expr '!'
+   48     | expr tPRINTLN
+   49     | tREAD
+   50     | tNEXT arg ';'
+   51     | tSTOP arg ';'
+   52     | tRETURN
+   53     | tREPEAT '(' expr ';' expr ';' expr ')' stmt
+   54     | tIF '(' expr ')' stmt
+   55     | tIF '(' expr ')' stmt tELSE stmt
+   56     | block
+
+   57 expr: tINTEGER
+   58     | tSTRING
+   59     | '-' expr
+   60     | '~' expr
+   61     | expr '+' expr
+   62     | expr '-' expr
+   63     | expr '*' expr
+   64     | expr '/' expr
+   65     | expr '%' expr
+   66     | expr '<' expr
+   67     | expr '|' expr
+   68     | expr '&' expr
+   69     | expr '>' expr
+   70     | expr tGE expr
+   71     | expr tLE expr
+   72     | expr tNE expr
+   73     | expr tEQ expr
+   74     | '(' expr ')'
+   75     | lval '=' expr
+   76     | lval '=' '[' tINTEGER ']'
+   77     | lval
+   78     | funcall
+
+   79 lval: index
+   80     | var
+
+   81 index: lval '[' lval ']'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 25 26 47
+'#' (35) 34
+'$' (36) 36
+'%' (37) 35 65
+'&' (38) 68
+'(' (40) 18 24 26 53 54 55 74
+')' (41) 18 24 26 53 54 55 74
+'*' (42) 37 63
+'+' (43) 61
+',' (44) 28 30
+'-' (45) 59 62
+'/' (47) 64
+';' (59) 13 22 46 50 51 53
+'<' (60) 66
+'=' (61) 16 17 75 76
+'>' (62) 69
+'[' (91) 76 81
+']' (93) 76 81
+'{' (123) 42 43 44 45
+'|' (124) 67
+'}' (125) 42 43 44 45
+'~' (126) 60
+error (256)
+tNOOB (258) 9
+tREAL (259) 7
+tINTEGER (260) 8 32 57 76
+tIDENTIFIER (261) 18 22 23 24 25 26
+tSTRING (262) 6 58
+tIF (263) 54 55
+tREAD (264) 49
+tBEGIN (265)
+tEND (266)
+tREPEAT (267) 53
+tNEXT (268) 50
+tSTOP (269) 51
+tLOCAL (270) 19
+tIMPORT (271) 20
+tRETURN (272) 52
+tPRINTLN (273) 48
+tIFX (274)
+tELSE (275) 55
+tNE (276) 72
+tEQ (277) 73
+tLE (278) 71
+tGE (279) 70
+tUNARY (280)
+"()" (281) 23 25
+"<#>" (282) 38
+"<%>" (283) 39
+"<$>" (284) 40
+"<*>" (285) 41
+
+
+Nonterminals, with rules where they appear
+
+$accept (53)
+    on left: 0
+file (54)
+    on left: 1, on right: 0
+declist (55)
+    on left: 2 3, on right: 1 3 42 44
+stmtlist (56)
+    on left: 4 5, on right: 5 42 43
+literal (57)
+    on left: 6 7 8 9, on right: 16 17
+decl (58)
+    on left: 10 11, on right: 2 3
+vardecl (59)
+    on left: 12 13, on right: 10 27 28
+funcdecl (60)
+    on left: 14 15 16 17, on right: 11
+funcall (61)
+    on left: 18, on right: 78
+qualifier (62)
+    on left: 19 20 21, on right: 12 13 14 15 16 17
+var (63)
+    on left: 22, on right: 12 13 80
+func (64)
+    on left: 23 24 25 26, on right: 14 15 16 17
+argsdecl (65)
+    on left: 27 28, on right: 24 26 28
+argscall (66)
+    on left: 29 30 31, on right: 18 30
+arg (67)
+    on left: 32 33, on right: 50 51
+type (68)
+    on left: 34 35 36 37 38 39 40 41, on right: 12 13 23 24
+block (69)
+    on left: 42 43 44 45, on right: 15 17 56
+stmt (70)
+    on left: 46 47 48 49 50 51 52 53 54 55 56, on right: 4 5 53 54
+    55
+expr (71)
+    on left: 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74
+    75 76 77 78, on right: 29 30 46 47 48 53 54 55 59 60 61 62 63 64
+    65 66 67 68 69 70 71 72 73 74 75
+lval (72)
+    on left: 79 80, on right: 75 76 77 81
+index (73)
+    on left: 81, on right: 79
+
+
 state 0
-	$accept : . list $end  (0)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	tIF  shift 3
-	tPRINT  shift 4
-	tREAD  shift 5
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	'{'  shift 9
-	.  error
+    0 $accept: . file $end
 
-	list  goto 10
-	stmt  goto 11
-	expr  goto 12
+    tLOCAL   shift, and go to state 1
+    tIMPORT  shift, and go to state 2
+
+    $default  reduce using rule 21 (qualifier)
+
+    file       go to state 3
+    declist    go to state 4
+    decl       go to state 5
+    vardecl    go to state 6
+    funcdecl   go to state 7
+    qualifier  go to state 8
 
 
 state 1
-	expr : tINTEGER .  (9)
 
-	.  reduce 9
+   19 qualifier: tLOCAL .
+
+    $default  reduce using rule 19 (qualifier)
 
 
 state 2
-	expr : tSTRING .  (10)
 
-	.  reduce 10
+   20 qualifier: tIMPORT .
+
+    $default  reduce using rule 20 (qualifier)
 
 
 state 3
-	stmt : tIF . '(' expr ')' stmt  (6)
-	stmt : tIF . '(' expr ')' stmt tELSE stmt  (7)
 
-	'('  shift 13
-	.  error
+    0 $accept: file . $end
+
+    $end  shift, and go to state 9
 
 
 state 4
-	stmt : tPRINT . expr ';'  (4)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+    1 file: declist .
+    3 declist: declist . decl
 
-	expr  goto 14
+    tLOCAL   shift, and go to state 1
+    tIMPORT  shift, and go to state 2
+
+    $end      reduce using rule 1 (file)
+    $default  reduce using rule 21 (qualifier)
+
+    decl       go to state 10
+    vardecl    go to state 6
+    funcdecl   go to state 7
+    qualifier  go to state 8
 
 
 state 5
-	stmt : tREAD . lval ';'  (5)
 
-	lval  shift 15
-	.  error
+    2 declist: decl .
+
+    $default  reduce using rule 2 (declist)
 
 
 state 6
-	expr : '-' . expr  (11)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   10 decl: vardecl .
 
-	expr  goto 16
+    $default  reduce using rule 10 (decl)
 
 
 state 7
-	expr : lval .  (26)
-	expr : lval . '=' expr  (27)
 
-	'='  shift 17
-	tGE  reduce 26
-	tLE  reduce 26
-	tEQ  reduce 26
-	tNE  reduce 26
-	'>'  reduce 26
-	'<'  reduce 26
-	'+'  reduce 26
-	'-'  reduce 26
-	'*'  reduce 26
-	'/'  reduce 26
-	'%'  reduce 26
-	';'  reduce 26
-	')'  reduce 26
-	'|'  reduce 26
-	'&'  reduce 26
+   11 decl: funcdecl .
+
+    $default  reduce using rule 11 (decl)
 
 
 state 8
-	expr : '(' . expr ')'  (25)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   12 vardecl: qualifier . type var
+   13        | qualifier . type var ';'
+   14 funcdecl: qualifier . func
+   15         | qualifier . func block
+   16         | qualifier . func '=' literal
+   17         | qualifier . func '=' literal block
 
-	expr  goto 18
+    '*'    shift, and go to state 11
+    '%'    shift, and go to state 12
+    '!'    shift, and go to state 13
+    '#'    shift, and go to state 14
+    '$'    shift, and go to state 15
+    "<#>"  shift, and go to state 16
+    "<%>"  shift, and go to state 17
+    "<$>"  shift, and go to state 18
+    "<*>"  shift, and go to state 19
+
+    func  go to state 20
+    type  go to state 21
 
 
 state 9
-	stmt : '{' . list '}'  (8)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	tIF  shift 3
-	tPRINT  shift 4
-	tREAD  shift 5
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	'{'  shift 9
-	.  error
+    0 $accept: file $end .
 
-	list  goto 19
-	stmt  goto 11
-	expr  goto 12
+    $default  accept
 
 
 state 10
-	$accept : list . $end  (0)
-	list : list . stmt  (2)
 
-	$end  accept
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	tIF  shift 3
-	tPRINT  shift 4
-	tREAD  shift 5
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	'{'  shift 9
-	.  error
+    3 declist: declist decl .
 
-	stmt  goto 20
-	expr  goto 12
+    $default  reduce using rule 3 (declist)
 
 
 state 11
-	list : stmt .  (1)
 
-	.  reduce 1
+   37 type: '*' .
+
+    $default  reduce using rule 37 (type)
 
 
 state 12
-	stmt : expr . ';'  (3)
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	tGE  shift 21
-	tLE  shift 22
-	tEQ  shift 23
-	tNE  shift 24
-	'>'  shift 25
-	'<'  shift 26
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	';'  shift 32
-	'|'  shift 33
-	'&'  shift 34
-	.  error
+   35 type: '%' .
+
+    $default  reduce using rule 35 (type)
 
 
 state 13
-	stmt : tIF '(' . expr ')' stmt  (6)
-	stmt : tIF '(' . expr ')' stmt tELSE stmt  (7)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   25 func: '!' . tIDENTIFIER "()"
+   26     | '!' . tIDENTIFIER '(' argsdecl ')'
 
-	expr  goto 35
+    tIDENTIFIER  shift, and go to state 22
 
 
 state 14
-	stmt : tPRINT expr . ';'  (4)
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	tGE  shift 21
-	tLE  shift 22
-	tEQ  shift 23
-	tNE  shift 24
-	'>'  shift 25
-	'<'  shift 26
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	';'  shift 36
-	'|'  shift 33
-	'&'  shift 34
-	.  error
+   34 type: '#' .
+
+    $default  reduce using rule 34 (type)
 
 
 state 15
-	stmt : tREAD lval . ';'  (5)
 
-	';'  shift 37
-	.  error
+   36 type: '$' .
+
+    $default  reduce using rule 36 (type)
 
 
-16: shift/reduce conflict (shift 33, reduce 11) on '|'
-16: shift/reduce conflict (shift 34, reduce 11) on '&'
 state 16
-	expr : '-' expr .  (11)
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 11
-	tLE  reduce 11
-	tEQ  reduce 11
-	tNE  reduce 11
-	'>'  reduce 11
-	'<'  reduce 11
-	'+'  reduce 11
-	'-'  reduce 11
-	'*'  reduce 11
-	'/'  reduce 11
-	'%'  reduce 11
-	';'  reduce 11
-	')'  reduce 11
+   38 type: "<#>" .
+
+    $default  reduce using rule 38 (type)
 
 
 state 17
-	expr : lval '=' . expr  (27)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   39 type: "<%>" .
 
-	expr  goto 38
+    $default  reduce using rule 39 (type)
 
 
 state 18
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
-	expr : '(' expr . ')'  (25)
 
-	tGE  shift 21
-	tLE  shift 22
-	tEQ  shift 23
-	tNE  shift 24
-	'>'  shift 25
-	'<'  shift 26
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	')'  shift 39
-	'|'  shift 33
-	'&'  shift 34
-	.  error
+   40 type: "<$>" .
+
+    $default  reduce using rule 40 (type)
 
 
 state 19
-	list : list . stmt  (2)
-	stmt : '{' list . '}'  (8)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	tIF  shift 3
-	tPRINT  shift 4
-	tREAD  shift 5
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	'{'  shift 9
-	'}'  shift 40
-	.  error
+   41 type: "<*>" .
 
-	stmt  goto 20
-	expr  goto 12
+    $default  reduce using rule 41 (type)
 
 
 state 20
-	list : list stmt .  (2)
 
-	.  reduce 2
+   14 funcdecl: qualifier func .
+   15         | qualifier func . block
+   16         | qualifier func . '=' literal
+   17         | qualifier func . '=' literal block
+
+    '='  shift, and go to state 23
+    '{'  shift, and go to state 24
+
+    '{'       [reduce using rule 14 (funcdecl)]
+    $default  reduce using rule 14 (funcdecl)
+
+    block  go to state 25
 
 
 state 21
-	expr : expr tGE . expr  (21)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   12 vardecl: qualifier type . var
+   13        | qualifier type . var ';'
+   23 func: type . tIDENTIFIER "()"
+   24     | type . tIDENTIFIER '(' argsdecl ')'
 
-	expr  goto 41
+    tIDENTIFIER  shift, and go to state 26
+
+    var  go to state 27
 
 
 state 22
-	expr : expr tLE . expr  (22)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   25 func: '!' tIDENTIFIER . "()"
+   26     | '!' tIDENTIFIER . '(' argsdecl ')'
 
-	expr  goto 42
+    '('   shift, and go to state 28
+    "()"  shift, and go to state 29
 
 
 state 23
-	expr : expr tEQ . expr  (24)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   16 funcdecl: qualifier func '=' . literal
+   17         | qualifier func '=' . literal block
 
-	expr  goto 43
+    tNOOB     shift, and go to state 30
+    tREAL     shift, and go to state 31
+    tINTEGER  shift, and go to state 32
+    tSTRING   shift, and go to state 33
+
+    literal  go to state 34
 
 
 state 24
-	expr : expr tNE . expr  (23)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   42 block: '{' . declist stmtlist '}'
+   43      | '{' . stmtlist '}'
+   44      | '{' . declist '}'
+   45      | '{' . '}'
 
-	expr  goto 44
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    tIF          shift, and go to state 38
+    tREAD        shift, and go to state 39
+    tREPEAT      shift, and go to state 40
+    tNEXT        shift, and go to state 41
+    tSTOP        shift, and go to state 42
+    tLOCAL       shift, and go to state 1
+    tIMPORT      shift, and go to state 2
+    tRETURN      shift, and go to state 43
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+    '{'          shift, and go to state 24
+    '}'          shift, and go to state 47
+
+    $default  reduce using rule 21 (qualifier)
+
+    declist    go to state 48
+    stmtlist   go to state 49
+    decl       go to state 5
+    vardecl    go to state 6
+    funcdecl   go to state 7
+    funcall    go to state 50
+    qualifier  go to state 8
+    var        go to state 51
+    block      go to state 52
+    stmt       go to state 53
+    expr       go to state 54
+    lval       go to state 55
+    index      go to state 56
 
 
 state 25
-	expr : expr '>' . expr  (20)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   15 funcdecl: qualifier func block .
 
-	expr  goto 45
+    $default  reduce using rule 15 (funcdecl)
 
 
 state 26
-	expr : expr '<' . expr  (17)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   22 var: tIDENTIFIER . ';'
+   23 func: type tIDENTIFIER . "()"
+   24     | type tIDENTIFIER . '(' argsdecl ')'
 
-	expr  goto 46
+    ';'   shift, and go to state 57
+    '('   shift, and go to state 58
+    "()"  shift, and go to state 59
 
 
 state 27
-	expr : expr '+' . expr  (12)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   12 vardecl: qualifier type var .
+   13        | qualifier type var . ';'
 
-	expr  goto 47
+    ';'  shift, and go to state 60
+
+    $default  reduce using rule 12 (vardecl)
 
 
 state 28
-	expr : expr '-' . expr  (13)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   26 func: '!' tIDENTIFIER '(' . argsdecl ')'
 
-	expr  goto 48
+    tLOCAL   shift, and go to state 1
+    tIMPORT  shift, and go to state 2
+
+    $default  reduce using rule 21 (qualifier)
+
+    vardecl    go to state 61
+    qualifier  go to state 62
+    argsdecl   go to state 63
 
 
 state 29
-	expr : expr '*' . expr  (14)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   25 func: '!' tIDENTIFIER "()" .
 
-	expr  goto 49
+    $default  reduce using rule 25 (func)
 
 
 state 30
-	expr : expr '/' . expr  (15)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+    9 literal: tNOOB .
 
-	expr  goto 50
+    $default  reduce using rule 9 (literal)
 
 
 state 31
-	expr : expr '%' . expr  (16)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+    7 literal: tREAL .
 
-	expr  goto 51
+    $default  reduce using rule 7 (literal)
 
 
 state 32
-	stmt : expr ';' .  (3)
 
-	.  reduce 3
+    8 literal: tINTEGER .
+
+    $default  reduce using rule 8 (literal)
 
 
 state 33
-	expr : expr '|' . expr  (18)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+    6 literal: tSTRING .
 
-	expr  goto 52
+    $default  reduce using rule 6 (literal)
 
 
 state 34
-	expr : expr '&' . expr  (19)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	.  error
+   16 funcdecl: qualifier func '=' literal .
+   17         | qualifier func '=' literal . block
 
-	expr  goto 53
+    '{'  shift, and go to state 24
+
+    '{'       [reduce using rule 16 (funcdecl)]
+    $default  reduce using rule 16 (funcdecl)
+
+    block  go to state 64
 
 
 state 35
-	stmt : tIF '(' expr . ')' stmt  (6)
-	stmt : tIF '(' expr . ')' stmt tELSE stmt  (7)
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	tGE  shift 21
-	tLE  shift 22
-	tEQ  shift 23
-	tNE  shift 24
-	'>'  shift 25
-	'<'  shift 26
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	')'  shift 54
-	'|'  shift 33
-	'&'  shift 34
-	.  error
+   57 expr: tINTEGER .
+
+    $default  reduce using rule 57 (expr)
 
 
 state 36
-	stmt : tPRINT expr ';' .  (4)
 
-	.  reduce 4
+   18 funcall: tIDENTIFIER . '(' argscall ')'
+   22 var: tIDENTIFIER . ';'
+
+    ';'  shift, and go to state 57
+    '('  shift, and go to state 65
 
 
 state 37
-	stmt : tREAD lval ';' .  (5)
 
-	.  reduce 5
+   58 expr: tSTRING .
+
+    $default  reduce using rule 58 (expr)
 
 
-38: shift/reduce conflict (shift 33, reduce 27) on '|'
-38: shift/reduce conflict (shift 34, reduce 27) on '&'
 state 38
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
-	expr : lval '=' expr .  (27)
 
-	tGE  shift 21
-	tLE  shift 22
-	tEQ  shift 23
-	tNE  shift 24
-	'>'  shift 25
-	'<'  shift 26
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	';'  reduce 27
-	')'  reduce 27
+   54 stmt: tIF . '(' expr ')' stmt
+   55     | tIF . '(' expr ')' stmt tELSE stmt
+
+    '('  shift, and go to state 66
 
 
 state 39
-	expr : '(' expr ')' .  (25)
 
-	.  reduce 25
+   49 stmt: tREAD .
+
+    $default  reduce using rule 49 (stmt)
 
 
 state 40
-	stmt : '{' list '}' .  (8)
 
-	.  reduce 8
+   53 stmt: tREPEAT . '(' expr ';' expr ';' expr ')' stmt
+
+    '('  shift, and go to state 67
 
 
-41: shift/reduce conflict (shift 33, reduce 21) on '|'
-41: shift/reduce conflict (shift 34, reduce 21) on '&'
 state 41
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr tGE expr .  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 21
-	tLE  reduce 21
-	tEQ  reduce 21
-	tNE  reduce 21
-	'>'  reduce 21
-	'<'  reduce 21
-	';'  reduce 21
-	')'  reduce 21
+   50 stmt: tNEXT . arg ';'
+
+    tINTEGER  shift, and go to state 68
+
+    $default  reduce using rule 33 (arg)
+
+    arg  go to state 69
 
 
-42: shift/reduce conflict (shift 33, reduce 22) on '|'
-42: shift/reduce conflict (shift 34, reduce 22) on '&'
 state 42
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr tLE expr .  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 22
-	tLE  reduce 22
-	tEQ  reduce 22
-	tNE  reduce 22
-	'>'  reduce 22
-	'<'  reduce 22
-	';'  reduce 22
-	')'  reduce 22
+   51 stmt: tSTOP . arg ';'
+
+    tINTEGER  shift, and go to state 68
+
+    $default  reduce using rule 33 (arg)
+
+    arg  go to state 70
 
 
-43: shift/reduce conflict (shift 33, reduce 24) on '|'
-43: shift/reduce conflict (shift 34, reduce 24) on '&'
 state 43
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
-	expr : expr tEQ expr .  (24)
 
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 24
-	tLE  reduce 24
-	tEQ  reduce 24
-	tNE  reduce 24
-	'>'  reduce 24
-	'<'  reduce 24
-	';'  reduce 24
-	')'  reduce 24
+   52 stmt: tRETURN .
+
+    $default  reduce using rule 52 (stmt)
 
 
-44: shift/reduce conflict (shift 33, reduce 23) on '|'
-44: shift/reduce conflict (shift 34, reduce 23) on '&'
 state 44
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr tNE expr .  (23)
-	expr : expr . tEQ expr  (24)
 
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 23
-	tLE  reduce 23
-	tEQ  reduce 23
-	tNE  reduce 23
-	'>'  reduce 23
-	'<'  reduce 23
-	';'  reduce 23
-	')'  reduce 23
+   59 expr: '-' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 71
+    lval     go to state 55
+    index    go to state 56
 
 
-45: shift/reduce conflict (shift 33, reduce 20) on '|'
-45: shift/reduce conflict (shift 34, reduce 20) on '&'
 state 45
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr '>' expr .  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 20
-	tLE  reduce 20
-	tEQ  reduce 20
-	tNE  reduce 20
-	'>'  reduce 20
-	'<'  reduce 20
-	';'  reduce 20
-	')'  reduce 20
+   60 expr: '~' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 72
+    lval     go to state 55
+    index    go to state 56
 
 
-46: shift/reduce conflict (shift 33, reduce 17) on '|'
-46: shift/reduce conflict (shift 34, reduce 17) on '&'
 state 46
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr '<' expr .  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 17
-	tLE  reduce 17
-	tEQ  reduce 17
-	tNE  reduce 17
-	'>'  reduce 17
-	'<'  reduce 17
-	';'  reduce 17
-	')'  reduce 17
+   74 expr: '(' . expr ')'
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 73
+    lval     go to state 55
+    index    go to state 56
 
 
-47: shift/reduce conflict (shift 33, reduce 12) on '|'
-47: shift/reduce conflict (shift 34, reduce 12) on '&'
 state 47
-	expr : expr . '+' expr  (12)
-	expr : expr '+' expr .  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 12
-	tLE  reduce 12
-	tEQ  reduce 12
-	tNE  reduce 12
-	'>'  reduce 12
-	'<'  reduce 12
-	'+'  reduce 12
-	'-'  reduce 12
-	';'  reduce 12
-	')'  reduce 12
+   45 block: '{' '}' .
+
+    $default  reduce using rule 45 (block)
 
 
-48: shift/reduce conflict (shift 33, reduce 13) on '|'
-48: shift/reduce conflict (shift 34, reduce 13) on '&'
 state 48
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr '-' expr .  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 13
-	tLE  reduce 13
-	tEQ  reduce 13
-	tNE  reduce 13
-	'>'  reduce 13
-	'<'  reduce 13
-	'+'  reduce 13
-	'-'  reduce 13
-	';'  reduce 13
-	')'  reduce 13
+    3 declist: declist . decl
+   42 block: '{' declist . stmtlist '}'
+   44      | '{' declist . '}'
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    tIF          shift, and go to state 38
+    tREAD        shift, and go to state 39
+    tREPEAT      shift, and go to state 40
+    tNEXT        shift, and go to state 41
+    tSTOP        shift, and go to state 42
+    tLOCAL       shift, and go to state 1
+    tIMPORT      shift, and go to state 2
+    tRETURN      shift, and go to state 43
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+    '{'          shift, and go to state 24
+    '}'          shift, and go to state 74
+
+    $default  reduce using rule 21 (qualifier)
+
+    stmtlist   go to state 75
+    decl       go to state 10
+    vardecl    go to state 6
+    funcdecl   go to state 7
+    funcall    go to state 50
+    qualifier  go to state 8
+    var        go to state 51
+    block      go to state 52
+    stmt       go to state 53
+    expr       go to state 54
+    lval       go to state 55
+    index      go to state 56
 
 
-49: shift/reduce conflict (shift 33, reduce 14) on '|'
-49: shift/reduce conflict (shift 34, reduce 14) on '&'
 state 49
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr '*' expr .  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 14
-	tLE  reduce 14
-	tEQ  reduce 14
-	tNE  reduce 14
-	'>'  reduce 14
-	'<'  reduce 14
-	'+'  reduce 14
-	'-'  reduce 14
-	'*'  reduce 14
-	'/'  reduce 14
-	'%'  reduce 14
-	';'  reduce 14
-	')'  reduce 14
+    5 stmtlist: stmtlist . stmt
+   43 block: '{' stmtlist . '}'
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    tIF          shift, and go to state 38
+    tREAD        shift, and go to state 39
+    tREPEAT      shift, and go to state 40
+    tNEXT        shift, and go to state 41
+    tSTOP        shift, and go to state 42
+    tRETURN      shift, and go to state 43
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+    '{'          shift, and go to state 24
+    '}'          shift, and go to state 76
+
+    funcall  go to state 50
+    var      go to state 51
+    block    go to state 52
+    stmt     go to state 77
+    expr     go to state 54
+    lval     go to state 55
+    index    go to state 56
 
 
-50: shift/reduce conflict (shift 33, reduce 15) on '|'
-50: shift/reduce conflict (shift 34, reduce 15) on '&'
 state 50
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr '/' expr .  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 15
-	tLE  reduce 15
-	tEQ  reduce 15
-	tNE  reduce 15
-	'>'  reduce 15
-	'<'  reduce 15
-	'+'  reduce 15
-	'-'  reduce 15
-	'*'  reduce 15
-	'/'  reduce 15
-	'%'  reduce 15
-	';'  reduce 15
-	')'  reduce 15
+   78 expr: funcall .
+
+    $default  reduce using rule 78 (expr)
 
 
-51: shift/reduce conflict (shift 33, reduce 16) on '|'
-51: shift/reduce conflict (shift 34, reduce 16) on '&'
 state 51
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr '%' expr .  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	'|'  shift 33
-	'&'  shift 34
-	tGE  reduce 16
-	tLE  reduce 16
-	tEQ  reduce 16
-	tNE  reduce 16
-	'>'  reduce 16
-	'<'  reduce 16
-	'+'  reduce 16
-	'-'  reduce 16
-	'*'  reduce 16
-	'/'  reduce 16
-	'%'  reduce 16
-	';'  reduce 16
-	')'  reduce 16
+   80 lval: var .
+
+    $default  reduce using rule 80 (lval)
 
 
-52: shift/reduce conflict (shift 21, reduce 18) on tGE
-52: shift/reduce conflict (shift 22, reduce 18) on tLE
-52: shift/reduce conflict (shift 23, reduce 18) on tEQ
-52: shift/reduce conflict (shift 24, reduce 18) on tNE
-52: shift/reduce conflict (shift 25, reduce 18) on '>'
-52: shift/reduce conflict (shift 26, reduce 18) on '<'
-52: shift/reduce conflict (shift 27, reduce 18) on '+'
-52: shift/reduce conflict (shift 28, reduce 18) on '-'
-52: shift/reduce conflict (shift 29, reduce 18) on '*'
-52: shift/reduce conflict (shift 30, reduce 18) on '/'
-52: shift/reduce conflict (shift 31, reduce 18) on '%'
-52: shift/reduce conflict (shift 33, reduce 18) on '|'
-52: shift/reduce conflict (shift 34, reduce 18) on '&'
 state 52
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr '|' expr .  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	tGE  shift 21
-	tLE  shift 22
-	tEQ  shift 23
-	tNE  shift 24
-	'>'  shift 25
-	'<'  shift 26
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	';'  reduce 18
-	')'  reduce 18
+   56 stmt: block .
+
+    $default  reduce using rule 56 (stmt)
 
 
-53: shift/reduce conflict (shift 21, reduce 19) on tGE
-53: shift/reduce conflict (shift 22, reduce 19) on tLE
-53: shift/reduce conflict (shift 23, reduce 19) on tEQ
-53: shift/reduce conflict (shift 24, reduce 19) on tNE
-53: shift/reduce conflict (shift 25, reduce 19) on '>'
-53: shift/reduce conflict (shift 26, reduce 19) on '<'
-53: shift/reduce conflict (shift 27, reduce 19) on '+'
-53: shift/reduce conflict (shift 28, reduce 19) on '-'
-53: shift/reduce conflict (shift 29, reduce 19) on '*'
-53: shift/reduce conflict (shift 30, reduce 19) on '/'
-53: shift/reduce conflict (shift 31, reduce 19) on '%'
-53: shift/reduce conflict (shift 33, reduce 19) on '|'
-53: shift/reduce conflict (shift 34, reduce 19) on '&'
 state 53
-	expr : expr . '+' expr  (12)
-	expr : expr . '-' expr  (13)
-	expr : expr . '*' expr  (14)
-	expr : expr . '/' expr  (15)
-	expr : expr . '%' expr  (16)
-	expr : expr . '<' expr  (17)
-	expr : expr . '|' expr  (18)
-	expr : expr . '&' expr  (19)
-	expr : expr '&' expr .  (19)
-	expr : expr . '>' expr  (20)
-	expr : expr . tGE expr  (21)
-	expr : expr . tLE expr  (22)
-	expr : expr . tNE expr  (23)
-	expr : expr . tEQ expr  (24)
 
-	tGE  shift 21
-	tLE  shift 22
-	tEQ  shift 23
-	tNE  shift 24
-	'>'  shift 25
-	'<'  shift 26
-	'+'  shift 27
-	'-'  shift 28
-	'*'  shift 29
-	'/'  shift 30
-	'%'  shift 31
-	'|'  shift 33
-	'&'  shift 34
-	';'  reduce 19
-	')'  reduce 19
+    4 stmtlist: stmt .
+
+    $default  reduce using rule 4 (stmtlist)
 
 
 state 54
-	stmt : tIF '(' expr ')' . stmt  (6)
-	stmt : tIF '(' expr ')' . stmt tELSE stmt  (7)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	tIF  shift 3
-	tPRINT  shift 4
-	tREAD  shift 5
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	'{'  shift 9
-	.  error
+   46 stmt: expr . ';'
+   47     | expr . '!'
+   48     | expr . tPRINTLN
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
 
-	stmt  goto 55
-	expr  goto 12
+    tPRINTLN  shift, and go to state 78
+    '>'       shift, and go to state 79
+    '<'       shift, and go to state 80
+    tNE       shift, and go to state 81
+    tEQ       shift, and go to state 82
+    tLE       shift, and go to state 83
+    tGE       shift, and go to state 84
+    '+'       shift, and go to state 85
+    '-'       shift, and go to state 86
+    '*'       shift, and go to state 87
+    '/'       shift, and go to state 88
+    '%'       shift, and go to state 89
+    '&'       shift, and go to state 90
+    '|'       shift, and go to state 91
+    ';'       shift, and go to state 92
+    '!'       shift, and go to state 93
 
 
 state 55
-	stmt : tIF '(' expr ')' stmt .  (6)
-	stmt : tIF '(' expr ')' stmt . tELSE stmt  (7)
 
-	tELSE  shift 56
-	$end  reduce 6
-	tINTEGER  reduce 6
-	tSTRING  reduce 6
-	tIF  reduce 6
-	tPRINT  reduce 6
-	tREAD  reduce 6
-	'-'  reduce 6
-	lval  reduce 6
-	'('  reduce 6
-	'{'  reduce 6
-	'}'  reduce 6
+   75 expr: lval . '=' expr
+   76     | lval . '=' '[' tINTEGER ']'
+   77     | lval .
+   81 index: lval . '[' lval ']'
+
+    '='  shift, and go to state 94
+    '['  shift, and go to state 95
+
+    $default  reduce using rule 77 (expr)
 
 
 state 56
-	stmt : tIF '(' expr ')' stmt tELSE . stmt  (7)
 
-	tINTEGER  shift 1
-	tSTRING  shift 2
-	tIF  shift 3
-	tPRINT  shift 4
-	tREAD  shift 5
-	'-'  shift 6
-	lval  shift 7
-	'('  shift 8
-	'{'  shift 9
-	.  error
+   79 lval: index .
 
-	stmt  goto 57
-	expr  goto 12
+    $default  reduce using rule 79 (lval)
 
 
 state 57
-	stmt : tIF '(' expr ')' stmt tELSE stmt .  (7)
 
-	.  reduce 7
+   22 var: tIDENTIFIER ';' .
 
-
-State 16 contains 2 shift/reduce conflicts.
-State 38 contains 2 shift/reduce conflicts.
-State 41 contains 2 shift/reduce conflicts.
-State 42 contains 2 shift/reduce conflicts.
-State 43 contains 2 shift/reduce conflicts.
-State 44 contains 2 shift/reduce conflicts.
-State 45 contains 2 shift/reduce conflicts.
-State 46 contains 2 shift/reduce conflicts.
-State 47 contains 2 shift/reduce conflicts.
-State 48 contains 2 shift/reduce conflicts.
-State 49 contains 2 shift/reduce conflicts.
-State 50 contains 2 shift/reduce conflicts.
-State 51 contains 2 shift/reduce conflicts.
-State 52 contains 13 shift/reduce conflicts.
-State 53 contains 13 shift/reduce conflicts.
+    $default  reduce using rule 22 (var)
 
 
-42 terminals, 4 nonterminals
-28 grammar rules, 58 states
+state 58
+
+   24 func: type tIDENTIFIER '(' . argsdecl ')'
+
+    tLOCAL   shift, and go to state 1
+    tIMPORT  shift, and go to state 2
+
+    $default  reduce using rule 21 (qualifier)
+
+    vardecl    go to state 61
+    qualifier  go to state 62
+    argsdecl   go to state 96
+
+
+state 59
+
+   23 func: type tIDENTIFIER "()" .
+
+    $default  reduce using rule 23 (func)
+
+
+state 60
+
+   13 vardecl: qualifier type var ';' .
+
+    $default  reduce using rule 13 (vardecl)
+
+
+state 61
+
+   27 argsdecl: vardecl .
+
+    $default  reduce using rule 27 (argsdecl)
+
+
+state 62
+
+   12 vardecl: qualifier . type var
+   13        | qualifier . type var ';'
+
+    '*'    shift, and go to state 11
+    '%'    shift, and go to state 12
+    '#'    shift, and go to state 14
+    '$'    shift, and go to state 15
+    "<#>"  shift, and go to state 16
+    "<%>"  shift, and go to state 17
+    "<$>"  shift, and go to state 18
+    "<*>"  shift, and go to state 19
+
+    type  go to state 97
+
+
+state 63
+
+   26 func: '!' tIDENTIFIER '(' argsdecl . ')'
+   28 argsdecl: argsdecl . ',' vardecl
+
+    ')'  shift, and go to state 98
+    ','  shift, and go to state 99
+
+
+state 64
+
+   17 funcdecl: qualifier func '=' literal block .
+
+    $default  reduce using rule 17 (funcdecl)
+
+
+state 65
+
+   18 funcall: tIDENTIFIER '(' . argscall ')'
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    $default  reduce using rule 31 (argscall)
+
+    funcall   go to state 50
+    var       go to state 51
+    argscall  go to state 100
+    expr      go to state 101
+    lval      go to state 55
+    index     go to state 56
+
+
+state 66
+
+   54 stmt: tIF '(' . expr ')' stmt
+   55     | tIF '(' . expr ')' stmt tELSE stmt
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 102
+    lval     go to state 55
+    index    go to state 56
+
+
+state 67
+
+   53 stmt: tREPEAT '(' . expr ';' expr ';' expr ')' stmt
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 103
+    lval     go to state 55
+    index    go to state 56
+
+
+state 68
+
+   32 arg: tINTEGER .
+
+    $default  reduce using rule 32 (arg)
+
+
+state 69
+
+   50 stmt: tNEXT arg . ';'
+
+    ';'  shift, and go to state 104
+
+
+state 70
+
+   51 stmt: tSTOP arg . ';'
+
+    ';'  shift, and go to state 105
+
+
+state 71
+
+   59 expr: '-' expr .
+   61     | expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    $default  reduce using rule 59 (expr)
+
+
+state 72
+
+   60 expr: '~' expr .
+   61     | expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    $default  reduce using rule 60 (expr)
+
+
+state 73
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+   74     | '(' expr . ')'
+
+    '>'  shift, and go to state 79
+    '<'  shift, and go to state 80
+    tNE  shift, and go to state 81
+    tEQ  shift, and go to state 82
+    tLE  shift, and go to state 83
+    tGE  shift, and go to state 84
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+    ')'  shift, and go to state 106
+
+
+state 74
+
+   44 block: '{' declist '}' .
+
+    $default  reduce using rule 44 (block)
+
+
+state 75
+
+    5 stmtlist: stmtlist . stmt
+   42 block: '{' declist stmtlist . '}'
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    tIF          shift, and go to state 38
+    tREAD        shift, and go to state 39
+    tREPEAT      shift, and go to state 40
+    tNEXT        shift, and go to state 41
+    tSTOP        shift, and go to state 42
+    tRETURN      shift, and go to state 43
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+    '{'          shift, and go to state 24
+    '}'          shift, and go to state 107
+
+    funcall  go to state 50
+    var      go to state 51
+    block    go to state 52
+    stmt     go to state 77
+    expr     go to state 54
+    lval     go to state 55
+    index    go to state 56
+
+
+state 76
+
+   43 block: '{' stmtlist '}' .
+
+    $default  reduce using rule 43 (block)
+
+
+state 77
+
+    5 stmtlist: stmtlist stmt .
+
+    $default  reduce using rule 5 (stmtlist)
+
+
+state 78
+
+   48 stmt: expr tPRINTLN .
+
+    $default  reduce using rule 48 (stmt)
+
+
+state 79
+
+   69 expr: expr '>' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 108
+    lval     go to state 55
+    index    go to state 56
+
+
+state 80
+
+   66 expr: expr '<' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 109
+    lval     go to state 55
+    index    go to state 56
+
+
+state 81
+
+   72 expr: expr tNE . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 110
+    lval     go to state 55
+    index    go to state 56
+
+
+state 82
+
+   73 expr: expr tEQ . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 111
+    lval     go to state 55
+    index    go to state 56
+
+
+state 83
+
+   71 expr: expr tLE . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 112
+    lval     go to state 55
+    index    go to state 56
+
+
+state 84
+
+   70 expr: expr tGE . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 113
+    lval     go to state 55
+    index    go to state 56
+
+
+state 85
+
+   61 expr: expr '+' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 114
+    lval     go to state 55
+    index    go to state 56
+
+
+state 86
+
+   62 expr: expr '-' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 115
+    lval     go to state 55
+    index    go to state 56
+
+
+state 87
+
+   63 expr: expr '*' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 116
+    lval     go to state 55
+    index    go to state 56
+
+
+state 88
+
+   64 expr: expr '/' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 117
+    lval     go to state 55
+    index    go to state 56
+
+
+state 89
+
+   65 expr: expr '%' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 118
+    lval     go to state 55
+    index    go to state 56
+
+
+state 90
+
+   68 expr: expr '&' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 119
+    lval     go to state 55
+    index    go to state 56
+
+
+state 91
+
+   67 expr: expr '|' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 120
+    lval     go to state 55
+    index    go to state 56
+
+
+state 92
+
+   46 stmt: expr ';' .
+
+    $default  reduce using rule 46 (stmt)
+
+
+state 93
+
+   47 stmt: expr '!' .
+
+    $default  reduce using rule 47 (stmt)
+
+
+state 94
+
+   75 expr: lval '=' . expr
+   76     | lval '=' . '[' tINTEGER ']'
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+    '['          shift, and go to state 121
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 122
+    lval     go to state 55
+    index    go to state 56
+
+
+state 95
+
+   81 index: lval '[' . lval ']'
+
+    tIDENTIFIER  shift, and go to state 123
+
+    var    go to state 51
+    lval   go to state 124
+    index  go to state 56
+
+
+state 96
+
+   24 func: type tIDENTIFIER '(' argsdecl . ')'
+   28 argsdecl: argsdecl . ',' vardecl
+
+    ')'  shift, and go to state 125
+    ','  shift, and go to state 99
+
+
+state 97
+
+   12 vardecl: qualifier type . var
+   13        | qualifier type . var ';'
+
+    tIDENTIFIER  shift, and go to state 123
+
+    var  go to state 27
+
+
+state 98
+
+   26 func: '!' tIDENTIFIER '(' argsdecl ')' .
+
+    $default  reduce using rule 26 (func)
+
+
+state 99
+
+   28 argsdecl: argsdecl ',' . vardecl
+
+    tLOCAL   shift, and go to state 1
+    tIMPORT  shift, and go to state 2
+
+    $default  reduce using rule 21 (qualifier)
+
+    vardecl    go to state 126
+    qualifier  go to state 62
+
+
+state 100
+
+   18 funcall: tIDENTIFIER '(' argscall . ')'
+   30 argscall: argscall . ',' expr
+
+    ')'  shift, and go to state 127
+    ','  shift, and go to state 128
+
+
+state 101
+
+   29 argscall: expr .
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '>'  shift, and go to state 79
+    '<'  shift, and go to state 80
+    tNE  shift, and go to state 81
+    tEQ  shift, and go to state 82
+    tLE  shift, and go to state 83
+    tGE  shift, and go to state 84
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 29 (argscall)
+
+
+state 102
+
+   54 stmt: tIF '(' expr . ')' stmt
+   55     | tIF '(' expr . ')' stmt tELSE stmt
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '>'  shift, and go to state 79
+    '<'  shift, and go to state 80
+    tNE  shift, and go to state 81
+    tEQ  shift, and go to state 82
+    tLE  shift, and go to state 83
+    tGE  shift, and go to state 84
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+    ')'  shift, and go to state 129
+
+
+state 103
+
+   53 stmt: tREPEAT '(' expr . ';' expr ';' expr ')' stmt
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '>'  shift, and go to state 79
+    '<'  shift, and go to state 80
+    tNE  shift, and go to state 81
+    tEQ  shift, and go to state 82
+    tLE  shift, and go to state 83
+    tGE  shift, and go to state 84
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+    ';'  shift, and go to state 130
+
+
+state 104
+
+   50 stmt: tNEXT arg ';' .
+
+    $default  reduce using rule 50 (stmt)
+
+
+state 105
+
+   51 stmt: tSTOP arg ';' .
+
+    $default  reduce using rule 51 (stmt)
+
+
+state 106
+
+   74 expr: '(' expr ')' .
+
+    $default  reduce using rule 74 (expr)
+
+
+state 107
+
+   42 block: '{' declist stmtlist '}' .
+
+    $default  reduce using rule 42 (block)
+
+
+state 108
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   69     | expr '>' expr .
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 69 (expr)
+
+
+state 109
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   66     | expr '<' expr .
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 66 (expr)
+
+
+state 110
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   72     | expr tNE expr .
+   73     | expr . tEQ expr
+
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 72 (expr)
+
+
+state 111
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+   73     | expr tEQ expr .
+
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 73 (expr)
+
+
+state 112
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   71     | expr tLE expr .
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 71 (expr)
+
+
+state 113
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   70     | expr tGE expr .
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 70 (expr)
+
+
+state 114
+
+   61 expr: expr . '+' expr
+   61     | expr '+' expr .
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 61 (expr)
+
+
+state 115
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   62     | expr '-' expr .
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 62 (expr)
+
+
+state 116
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   63     | expr '*' expr .
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 63 (expr)
+
+
+state 117
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   64     | expr '/' expr .
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 64 (expr)
+
+
+state 118
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   65     | expr '%' expr .
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 65 (expr)
+
+
+state 119
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   68     | expr '&' expr .
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    $default  reduce using rule 68 (expr)
+
+
+state 120
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   67     | expr '|' expr .
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    $default  reduce using rule 67 (expr)
+
+
+state 121
+
+   76 expr: lval '=' '[' . tINTEGER ']'
+
+    tINTEGER  shift, and go to state 131
+
+
+state 122
+
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+   75     | lval '=' expr .
+
+    '>'  shift, and go to state 79
+    '<'  shift, and go to state 80
+    tNE  shift, and go to state 81
+    tEQ  shift, and go to state 82
+    tLE  shift, and go to state 83
+    tGE  shift, and go to state 84
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 75 (expr)
+
+
+state 123
+
+   22 var: tIDENTIFIER . ';'
+
+    ';'  shift, and go to state 57
+
+
+state 124
+
+   81 index: lval . '[' lval ']'
+   81      | lval '[' lval . ']'
+
+    '['  shift, and go to state 95
+    ']'  shift, and go to state 132
+
+
+state 125
+
+   24 func: type tIDENTIFIER '(' argsdecl ')' .
+
+    $default  reduce using rule 24 (func)
+
+
+state 126
+
+   28 argsdecl: argsdecl ',' vardecl .
+
+    $default  reduce using rule 28 (argsdecl)
+
+
+state 127
+
+   18 funcall: tIDENTIFIER '(' argscall ')' .
+
+    $default  reduce using rule 18 (funcall)
+
+
+state 128
+
+   30 argscall: argscall ',' . expr
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 133
+    lval     go to state 55
+    index    go to state 56
+
+
+state 129
+
+   54 stmt: tIF '(' expr ')' . stmt
+   55     | tIF '(' expr ')' . stmt tELSE stmt
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    tIF          shift, and go to state 38
+    tREAD        shift, and go to state 39
+    tREPEAT      shift, and go to state 40
+    tNEXT        shift, and go to state 41
+    tSTOP        shift, and go to state 42
+    tRETURN      shift, and go to state 43
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+    '{'          shift, and go to state 24
+
+    funcall  go to state 50
+    var      go to state 51
+    block    go to state 52
+    stmt     go to state 134
+    expr     go to state 54
+    lval     go to state 55
+    index    go to state 56
+
+
+state 130
+
+   53 stmt: tREPEAT '(' expr ';' . expr ';' expr ')' stmt
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 135
+    lval     go to state 55
+    index    go to state 56
+
+
+state 131
+
+   76 expr: lval '=' '[' tINTEGER . ']'
+
+    ']'  shift, and go to state 136
+
+
+state 132
+
+   81 index: lval '[' lval ']' .
+
+    $default  reduce using rule 81 (index)
+
+
+state 133
+
+   30 argscall: argscall ',' expr .
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '>'  shift, and go to state 79
+    '<'  shift, and go to state 80
+    tNE  shift, and go to state 81
+    tEQ  shift, and go to state 82
+    tLE  shift, and go to state 83
+    tGE  shift, and go to state 84
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+
+    $default  reduce using rule 30 (argscall)
+
+
+state 134
+
+   54 stmt: tIF '(' expr ')' stmt .
+   55     | tIF '(' expr ')' stmt . tELSE stmt
+
+    tELSE  shift, and go to state 137
+
+    $default  reduce using rule 54 (stmt)
+
+
+state 135
+
+   53 stmt: tREPEAT '(' expr ';' expr . ';' expr ')' stmt
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '>'  shift, and go to state 79
+    '<'  shift, and go to state 80
+    tNE  shift, and go to state 81
+    tEQ  shift, and go to state 82
+    tLE  shift, and go to state 83
+    tGE  shift, and go to state 84
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+    ';'  shift, and go to state 138
+
+
+state 136
+
+   76 expr: lval '=' '[' tINTEGER ']' .
+
+    $default  reduce using rule 76 (expr)
+
+
+state 137
+
+   55 stmt: tIF '(' expr ')' stmt tELSE . stmt
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    tIF          shift, and go to state 38
+    tREAD        shift, and go to state 39
+    tREPEAT      shift, and go to state 40
+    tNEXT        shift, and go to state 41
+    tSTOP        shift, and go to state 42
+    tRETURN      shift, and go to state 43
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+    '{'          shift, and go to state 24
+
+    funcall  go to state 50
+    var      go to state 51
+    block    go to state 52
+    stmt     go to state 139
+    expr     go to state 54
+    lval     go to state 55
+    index    go to state 56
+
+
+state 138
+
+   53 stmt: tREPEAT '(' expr ';' expr ';' . expr ')' stmt
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+
+    funcall  go to state 50
+    var      go to state 51
+    expr     go to state 140
+    lval     go to state 55
+    index    go to state 56
+
+
+state 139
+
+   55 stmt: tIF '(' expr ')' stmt tELSE stmt .
+
+    $default  reduce using rule 55 (stmt)
+
+
+state 140
+
+   53 stmt: tREPEAT '(' expr ';' expr ';' expr . ')' stmt
+   61 expr: expr . '+' expr
+   62     | expr . '-' expr
+   63     | expr . '*' expr
+   64     | expr . '/' expr
+   65     | expr . '%' expr
+   66     | expr . '<' expr
+   67     | expr . '|' expr
+   68     | expr . '&' expr
+   69     | expr . '>' expr
+   70     | expr . tGE expr
+   71     | expr . tLE expr
+   72     | expr . tNE expr
+   73     | expr . tEQ expr
+
+    '>'  shift, and go to state 79
+    '<'  shift, and go to state 80
+    tNE  shift, and go to state 81
+    tEQ  shift, and go to state 82
+    tLE  shift, and go to state 83
+    tGE  shift, and go to state 84
+    '+'  shift, and go to state 85
+    '-'  shift, and go to state 86
+    '*'  shift, and go to state 87
+    '/'  shift, and go to state 88
+    '%'  shift, and go to state 89
+    '&'  shift, and go to state 90
+    '|'  shift, and go to state 91
+    ')'  shift, and go to state 141
+
+
+state 141
+
+   53 stmt: tREPEAT '(' expr ';' expr ';' expr ')' . stmt
+
+    tINTEGER     shift, and go to state 35
+    tIDENTIFIER  shift, and go to state 36
+    tSTRING      shift, and go to state 37
+    tIF          shift, and go to state 38
+    tREAD        shift, and go to state 39
+    tREPEAT      shift, and go to state 40
+    tNEXT        shift, and go to state 41
+    tSTOP        shift, and go to state 42
+    tRETURN      shift, and go to state 43
+    '-'          shift, and go to state 44
+    '~'          shift, and go to state 45
+    '('          shift, and go to state 46
+    '{'          shift, and go to state 24
+
+    funcall  go to state 50
+    var      go to state 51
+    block    go to state 52
+    stmt     go to state 142
+    expr     go to state 54
+    lval     go to state 55
+    index    go to state 56
+
+
+state 142
+
+   53 stmt: tREPEAT '(' expr ';' expr ';' expr ')' stmt .
+
+    $default  reduce using rule 53 (stmt)

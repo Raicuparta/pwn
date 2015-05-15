@@ -1,5 +1,5 @@
 %{
-// $Id: pwn_parser.y,v 1.2 2015/03/25 11:17:11 ist173639 Exp $
+// $Id: pwn_parser.y,v 1.5 2015/04/14 10:00:27 ist173639 Exp $
 //-- don't change *any* of these: if you do, you'll break the compiler.
 #include <cdk/compiler.h>
 #include "ast/all.h"
@@ -46,7 +46,7 @@
 %left '~'
 %nonassoc tUNARY
 
-%type <node> stmt   
+%type <node> stmt
 %type <sequence> argscall argsdecl declist stmtlist
 %type <expression> expr literal decl vardecl funcdecl funcall
 %type <lvalue> lval 
@@ -177,7 +177,7 @@ expr : tINTEGER                { $$ = new cdk::integer_node(LINE, $1); }
 		| '(' expr ')'              { $$ = $2; }
 		| lval '=' expr             { $$ = new pwn::assignment_node(LINE, $1, $3); }
 		| lval '=' '[' tINTEGER ']' { $$ = new pwn::maloc_node(LINE, $4); } 	
-		| vardecl '=' expr             { $$ = new pwn::assignment_node(LINE, $1, $3); }
+		| vardecl '=' expr            { $$ = new pwn::assignment_node(LINE, $1, $3); }
 		| vardecl '=' '[' tINTEGER ']' { $$ = new pwn::maloc_node(LINE, $4); }
 		| lval									{ $$ = $1; }
 		| funcall								{ $$ = $1; }

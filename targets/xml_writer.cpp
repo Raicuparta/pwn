@@ -1,4 +1,4 @@
-// $Id: xml_writer.cpp,v 1.4 2015/03/25 11:17:11 ist173639 Exp $ -*- c++ -*-
+// $Id: xml_writer.cpp,v 1.7 2015/04/14 10:00:27 ist173639 Exp $ -*- c++ -*-
 #include <string>
 #include "targets/xml_writer.h"
 #include "targets/type_checker.h"
@@ -280,7 +280,7 @@ void pwn::xml_writer::do_func_decl_node(pwn::func_decl_node * const node, int lv
   //node->type()->accept(this, lvl + 4);
   //closeTag("type", lvl + 2);
   openTag("name", lvl + 2);
-  std::cout<< node->name()<< std::endl;
+	//os() << std::string(lvl+4, ' ') + "<" + &(node->name()) + ">" << std::endl;
   closeTag("name", lvl + 2);
 	
 	if (node->arguments() != nullptr) {
