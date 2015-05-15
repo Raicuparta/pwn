@@ -8,8 +8,8 @@
           node->type()->name() != basic_type::TYPE_UNSPEC) return; }
 
           
-          
-bool pwn::type_checker::compareType(const basic_type::type type, const basic_type::type accepedTypes[]) {
+//metodo auxiliar para verificar se um tipo e' pertence a um conjunto de tipos
+inline bool pwn::type_checker::isCompatibleType(basic_type::type type, const basic_type::type accepedTypes[]) {
 	return true;
 }
           
@@ -40,62 +40,140 @@ void pwn::type_checker::do_neg_node(cdk::neg_node * const node, int lvl) {
 
 //---------------------------------------------------------------------------
 
-inline void pwn::type_checker::processBinaryExpression(cdk::binary_expression_node * const node, int lvl) {
+inline void pwn::type_checker::processBinaryExpression(cdk::binary_expression_node * const node, int lvl, const basic_type::type acceptedTypes[]) {
   ASSERT_UNSPEC;
   node->left()->accept(this, lvl + 2);
-	node->right()->accept(this, lvl + 2);
-
-  // in Simple, expressions are always int
-  node->type(new basic_type(4, basic_type::TYPE_INT));
-}
-
-inline void pwn::type_checker::processAddSub(cdk::binary_expression_node * const node, int lvl) {
-  ASSERT_UNSPEC;
-	basic_type* newType;
-  node->left()->accept(this, lvl + 2);
-	if (node->left()->type()->name() == basic_type::TYPE_DOUBLE)
-		newType = node->left()->type();
-	else if (node->left()->type()->name() == basic_type::TYPE_DOUBLE)
-    throw std::string("wrong type in argument of unary expression");
-
+	if (!isCompatibleType(node->left()->type()->name(), acceptedTypes))
+		throw std::string("wrong type in left argument of binary expression");
 	
 	node->right()->accept(this, lvl + 2);
+	if (!isCompatibleType(node->right()->type()->name(), acceptedTypes))
+		throw std::string("wrong type in right argument of binary expression");
+}
 
+
+void pwn::type_checker::do_add_node(cdk::add_node * const node, int lvl) {
+	const basic_type::type acceptedTypes[3] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE, basic_type::TYPE_POINTER};
+	processBinaryExpression(node, lvl, acceptedTypes);
+	
+	basic_type* newType = new basic_type(4, basic_type::TYPE_INT);
+	
+	if (node->left()->type()->name() == basic_type::TYPE_POINTER) {
+		if(node->right()->type()->name() != basic_type::TYPE_INT)
+		throw std::string("only int can be added to pointer");
+		
+		newType = node->left()->type();
+	}
+	
+	if (node->right()->type()->name() == basic_type::TYPE_POINTER) {
+		if(node->left()->type()->name() != basic_type::TYPE_INT)
+		throw std::string("only int can be added to pointer");
+		
+		newType = node->right()->type();
+	}
+	
+	if (node->left()->type()->name() == basic_type::TYPE_DOUBLE) {
+		if(node->right()->type()->name() == basic_type::TYPE_POINTER)
+		throw std::string("real can only be added to real or int");
+		
+		newType = node->left()->type();
+	}
+	
+	if (node->right()->type()->name() == basic_type::TYPE_DOUBLE) {
+		if(node->left()->type()->name() == basic_type::TYPE_POINTER)
+		throw std::string("real can only be added to real or int");
+		
+		newType = node->right()->type();
+	}
+	
   node->type(newType);
 }
 
-void pwn::type_checker::do_add_node(cdk::add_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
-}
 void pwn::type_checker::do_sub_node(cdk::sub_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+  const basic_type::type acceptedTypes[3] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE, basic_type::TYPE_POINTER};
+	processBinaryExpression(node, lvl, acceptedTypes);
+	
+	basic_type* newType = new basic_type(4, basic_type::TYPE_INT);
+	
+	if (node->left()->type()->name() == basic_type::TYPE_POINTER) {
+		newType = node->left()->type();
+	}
+	
+	if (node->right()->type()->name() == basic_type::TYPE_POINTER) {
+		newType = node->right()->type();
+	}
+	
+	if (node->left()->type()->name() == basic_type::TYPE_DOUBLE) {
+		if(node->right()->type()->name() == basic_type::TYPE_POINTER)
+		throw std::string("real can only be subtracted from real or int");
+		
+		newType = node->left()->type();
+	}
+	
+	if (node->right()->type()->name() == basic_type::TYPE_DOUBLE) {
+		if(node->left()->type()->name() == basic_type::TYPE_POINTER)
+		throw std::string("real can only be subtracted from real or int");
+		
+		newType = node->right()->type();
+	}
+	
+  node->type(newType);
 }
+
+
+inline void pwn::type_checker::processMulDivMod(cdk::binary_expression_node * const node, int lvl) {
+	const basic_type::type acceptedTypes[2] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
+	processBinaryExpression(node, lvl, acceptedTypes);
+	
+	basic_type* newType = new basic_type(4, basic_type::TYPE_INT);
+	
+	if (node->left()->type()->name() == basic_type::TYPE_DOUBLE) {
+		newType = node->left()->type();
+	}
+	
+	if (node->right()->type()->name() == basic_type::TYPE_DOUBLE) {
+		newType = node->right()->type();
+	}
+	
+	node->type(newType);
+}
+
 void pwn::type_checker::do_mul_node(cdk::mul_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+	processMulDivMod(node, lvl);
 }
+
 void pwn::type_checker::do_div_node(cdk::div_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+	processMulDivMod(node, lvl);
 }
+
 void pwn::type_checker::do_mod_node(cdk::mod_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+	processMulDivMod(node, lvl);
 }
+
+inline void pwn::type_checker::processCompare(cdk::binary_expression_node * const node, int lvl) {
+	const basic_type::type acceptedTypes[2] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
+	processBinaryExpression(node, lvl, acceptedTypes);
+	node->type(new basic_type(4, basic_type::TYPE_BOOLEAN));
+}
+
+
 void pwn::type_checker::do_lt_node(cdk::lt_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+  processCompare(node, lvl);
 }
 void pwn::type_checker::do_le_node(cdk::le_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+  processCompare(node, lvl);
 }
 void pwn::type_checker::do_ge_node(cdk::ge_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+ processCompare(node, lvl);
 }
 void pwn::type_checker::do_gt_node(cdk::gt_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+  processCompare(node, lvl);
 }
 void pwn::type_checker::do_ne_node(cdk::ne_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+ processCompare(node, lvl);
 }
 void pwn::type_checker::do_eq_node(cdk::eq_node * const node, int lvl) {
-  processBinaryExpression(node, lvl);
+ processCompare(node, lvl);
 }
 
 //---------------------------------------------------------------------------
@@ -119,24 +197,14 @@ void pwn::type_checker::do_rvalue_node(pwn::rvalue_node * const node, int lvl) {
 
 void pwn::type_checker::do_assignment_node(pwn::assignment_node * const node, int lvl) {
   ASSERT_UNSPEC;
-
-  // DAVID: horrible hack!
-  // (this is caused by Simple not having explicit variable declarations)
-  /*const std::string &id = node->lvalue()->value();
-  if (!_symtab.find(id)) {
-    _symtab.insert(id, std::make_shared<pwn::symbol>(new basic_type(4, basic_type::TYPE_INT), id, -1)); // put in the symbol table
-  }*/
-
+	
   node->lvalue()->accept(this, lvl + 2);
-  if (node->lvalue()->type()->name() != basic_type::TYPE_INT)
-    throw std::string("wrong type in left argument of assignment expression");
-
-  node->rvalue()->accept(this, lvl + 2);
-  if (node->rvalue()->type()->name() != basic_type::TYPE_INT)
-    throw std::string("wrong type in right argument of assignment expression");
-
-  // in Simple, expressions are always int
-  node->type(new basic_type(4, basic_type::TYPE_INT));
+	node->rvalue()->accept(this, lvl + 2);
+  if (node->lvalue()->type()->name() != node->rvalue()->type()->name()
+		&& !((node->lvalue()->type()->name() == basic_type::TYPE_DOUBLE && node->rvalue()->type()->name() == basic_type::TYPE_INT)))
+			throw std::string("incompatible types in assignment");
+	
+  node->type(node->lvalue()->type());
 }
 
 //---------------------------------------------------------------------------
@@ -194,7 +262,7 @@ void pwn::type_checker::do_return_node(pwn::return_node * const node, int lvl) {
 }
 
 void pwn::type_checker::do_identity_node(pwn::identity_node * const node, int lvl) {
-	//TODO
+//TODO
 }
 
 void pwn::type_checker::do_next_node(pwn::next_node * const node, int lvl) {
@@ -218,11 +286,24 @@ void pwn::type_checker::do_func_def_node(pwn::func_def_node * const node, int lv
 void pwn::type_checker::do_func_call_node(pwn::func_call_node * const node, int lvl) {
 	//TODO
 }
+
 void pwn::type_checker::do_var_node(pwn::var_node * const node, int lvl) {
-	//TODO
+	ASSERT_UNSPEC;
+  const std::string &id = *node->var();
+  std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
+  if (!symbol) throw id + " undeclared";
+	basic_type type = *symbol->type();
+  node->type(&type);
 }
+
 void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
-	//TODO
+	ASSERT_UNSPEC;
+	const std::string &id = *node->name()->var();
+  if (!_symtab.find(id)) {
+    _symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, -1)); // put in the symbol table
+  }
+  
+  node->name()->type(node->type());
 }
 void pwn::type_checker::do_println_node(pwn::println_node * const node, int lvl) {
 	//TODO
