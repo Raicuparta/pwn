@@ -9,11 +9,11 @@ namespace pwn {
   /**
    * Class for describing read nodes.
    */
-  class read_node: public cdk::basic_node {
+  class read_node: public cdk::expression_node {
 
   public:
     inline read_node(int lineno) :
-        cdk::basic_node(lineno) {
+        cdk::expression_node(lineno) {
     }
 
   public:
