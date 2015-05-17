@@ -272,10 +272,16 @@ void pwn::postfix_writer::do_stop_node(pwn::stop_node * const node, int lvl) {
   //TODO
 }
 void pwn::postfix_writer::do_and_node(pwn::and_node * const node, int lvl) {
-  //TODO
+  CHECK_TYPES(_compiler, _symtab, node);
+  node->left()->accept(this, lvl);
+  node->right()->accept(this, lvl);
+  _pf.AND();
 }
 void pwn::postfix_writer::do_or_node(pwn::or_node * const node, int lvl) {
-  //TODO
+  CHECK_TYPES(_compiler, _symtab, node);
+  node->left()->accept(this, lvl);
+  node->right()->accept(this, lvl);
+  _pf.OR();
 }
 void pwn::postfix_writer::do_return_node(pwn::return_node * const node, int lvl) {
   //TODO
@@ -320,6 +326,8 @@ void pwn::postfix_writer::do_mem_address_node(pwn::mem_address_node * const node
   //TODO
 }
 void pwn::postfix_writer::do_not_node(pwn::not_node * const node, int lvl) {
-  //TODO
+  CHECK_TYPES(_compiler, _symtab, node);
+  node->argument()->accept(this, lvl); // determine the value
+  _pf.NOT(); // 2-complement
 }
 
