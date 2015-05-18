@@ -15,7 +15,7 @@
 %x X_STRING X_COMMENT
 %%
 
-
+		      {set_debug(1);}
 
 ">="                    return tGE; 
 "<="                    return tLE; 
@@ -63,8 +63,8 @@
 
 
 
-0|([1-9][0-9]*)        			yylval.i = strtol(yytext, nullptr, 10); return tINTEGER;
-0x[0-9a-fA-F]+		  		yylval.i = strtol(yytext, nullptr, 16); return tINTEGER;
+0|([1-9][0-9]*)				yylval.i = strtol(yytext, nullptr, 10); return tINTEGER;
+0x[0-9a-fA-F]+				yylval.i = strtol(yytext, nullptr, 16); return tINTEGER;
 
 [0-9]+(\.)?([0-9]+)?e-?[0-9]+		yylval.d = strtod(yytext, nullptr); return tREAL;
 ([0-9]+)?\.[0-9]+(e-?[0-9]+)?		yylval.d = strtod(yytext, nullptr); return tREAL;

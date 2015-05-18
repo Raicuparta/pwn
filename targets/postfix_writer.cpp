@@ -181,7 +181,7 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
   const std::string &sName = *name;
   _pf.GLOBAL(sName, _pf.FUNC());
   _pf.ALIGN();
-	_pf.LABEL(sName);
+  _pf.LABEL(sName);
   _pf.ENTER(0);  // Simple doesn't implement local variables
 
   if(node->name()->arguments() != NULL)
@@ -320,7 +320,10 @@ void pwn::postfix_writer::do_index_node(pwn::index_node * const node, int lvl) {
   //TODO
 }
 void pwn::postfix_writer::do_block_node(pwn::block_node * const node, int lvl) {
-  //TODO
+  if(node->vars())
+		node->vars()->accept(this, lvl + 2);
+  if(node->instructions())
+		node->instructions()->accept(this, lvl + 2);
 }
 void pwn::postfix_writer::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
   CHECK_TYPES(_compiler, _symtab, node);
