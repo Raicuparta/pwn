@@ -11,8 +11,7 @@
 //---------------------------------------------------------------------------
 
 void pwn::postfix_writer::do_sequence_node(cdk::sequence_node * const node, int lvl) {
-  std::cout<<"---------------WATCH OUT WE GOT A SEQUENCE OVER HERE-------------"<<std::endl;
-	for (size_t i = 0; i < node->size(); i++) {
+  for (size_t i = 0; i < node->size(); i++) {
     node->node(i)->accept(this, lvl);
   }
 }
@@ -20,13 +19,12 @@ void pwn::postfix_writer::do_sequence_node(cdk::sequence_node * const node, int 
 //---------------------------------------------------------------------------
 
 void pwn::postfix_writer::do_integer_node(cdk::integer_node * const node, int lvl) {
-	std::cout<<"---------------INT UP IN THIS BITCH-------------"<<std::endl;
   _pf.INT(node->value()); // push an integer
 }
 
 void pwn::postfix_writer::do_string_node(cdk::string_node * const node, int lvl) {
   int lbl1;
-	
+
   /* generate the string */
   _pf.RODATA(); // strings are DATA readonly
   _pf.ALIGN(); // make sure we are aligned
@@ -221,12 +219,7 @@ void pwn::postfix_writer::do_evaluation_node(pwn::evaluation_node * const node, 
 }
 
 void pwn::postfix_writer::do_print_node(pwn::print_node * const node, int lvl) {
-	std::cout << "-----------PRINT------------" << std::endl;
-  _pf.EXTERN("printi");
-  _pf.EXTERN("prints");
-  _pf.EXTERN("println");
-	
-	CHECK_TYPES(_compiler, _symtab, node);
+  CHECK_TYPES(_compiler, _symtab, node);
   node->argument()->accept(this, lvl); // determine the value to print
   if (node->argument()->type()->name() == basic_type::TYPE_INT) {
     _pf.CALL("printi");
