@@ -11,9 +11,10 @@ node->type()->name() != basic_type::TYPE_UNSPEC) return; }
 //metodo auxiliar para verificar se um tipo e' pertence a um conjunto de tipos
 inline bool pwn::type_checker::isCompatibleType(basic_type::type type, basic_type::type accepedTypes[], int size) {
   
-	for (int i = 0; i < size; i++) {
+	/*for (int i = 0; i < size; i++) {
 		if (accepedTypes[i] != type) return false;
-	}
+	}*/
+	//TODO
 	
 	return true;
 }
@@ -311,28 +312,30 @@ void pwn::type_checker::do_index_node(pwn::index_node * const node, int lvl) {
 	node->type(node->var()->type());
 }
 void pwn::type_checker::do_block_node(pwn::block_node * const node, int lvl) {
-  node->vars()->accept(this, lvl + 2);
-  node->instructions()->accept(this, lvl + 2);
+  if(node->vars())
+		node->vars()->accept(this, lvl + 2);
+  if(node->instructions())
+		node->instructions()->accept(this, lvl + 2);
 }
 void pwn::type_checker::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
-  ASSERT_UNSPEC;
+	//ASSERT_UNSPEC;
   const std::string &id = *node->name();
   if (!_symtab.find(id)) {
     _symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, -1)); // put in the symbol table
   }
 }
 void pwn::type_checker::do_func_def_node(pwn::func_def_node * const node, int lvl) {
-  ASSERT_UNSPEC;
+  //ASSERT_UNSPEC;
+	node->name()->accept(this, lvl);
   const std::string &id = *node->name()->name();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
   if (!symbol) throw id + " undeclared";
   basic_type type = *symbol->type();
   node->type(&type);
-  
   node->instructions()->accept(this, lvl + 2);
 }
 void pwn::type_checker::do_func_call_node(pwn::func_call_node * const node, int lvl) {
-  ASSERT_UNSPEC;
+  //ASSERT_UNSPEC;
   const std::string &id = *node->name();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
   if (!symbol) throw id + " undeclared";

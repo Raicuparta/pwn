@@ -163,10 +163,12 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
 
   // generate the main function (RTS mandates that its name be "_main")
   // stackcounter sc(node, _compiler);
-  CHECK_TYPES(_compiler, _symtab, node);
   
+  std::cout << "------ DEF -------" << std::endl;
+  CHECK_TYPES(_compiler, _symtab, node);
+
   _pf.TEXT();
-  _pf.ALIGN();
+ 
   
   std::string * name = node->name()->name(); //nome da funcao
   if(strcmp(name->c_str(), "pwn")==0){
@@ -178,7 +180,8 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
   
   const std::string &sName = *name;
   _pf.GLOBAL(sName, _pf.FUNC());
-  _pf.LABEL(sName);
+  _pf.ALIGN();
+	_pf.LABEL(sName);
   _pf.ENTER(0);  // Simple doesn't implement local variables
 
   if(node->name()->arguments() != NULL)
@@ -321,7 +324,10 @@ void pwn::postfix_writer::do_block_node(pwn::block_node * const node, int lvl) {
 }
 void pwn::postfix_writer::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
   CHECK_TYPES(_compiler, _symtab, node);
-  
+  std::cout << "------ DECL -------" << std::endl;
+	
+	
+	
   std::string * name = node->name(); //nome da funcao
   if(strcmp(name->c_str(), "pwn")==0){
     name = new std::string("_main");
@@ -334,6 +340,7 @@ void pwn::postfix_writer::do_func_decl_node(pwn::func_decl_node * const node, in
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(sName);
   
   if (symbol == NULL){
+		std::cout << "------ INSERTING " << sName << "-------" << std::endl;
     _symtab.insert(sName, std::make_shared<pwn::symbol> (node->type(), sName, -1));    
   }
   else {
