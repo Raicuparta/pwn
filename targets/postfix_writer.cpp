@@ -362,7 +362,7 @@ void pwn::postfix_writer::do_func_call_node(pwn::func_call_node * const node, in
   const std::string &sName = * name;
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(sName);
   
-  if( (symbol->type()->name() == basic_type::TYPE_INT) || (symbol->type()->name() == basic_type::TYPE_STRING) || (symbol->type()->name() == basic_type::TYPE_POINTER) )
+  if( (symbol->type()->name() == basic_type::TYPE_INT) || (symbol->type()->name() == basic_type::TYPE_STRING) )
      _pf.PUSH();
   
   if(symbol->type()->name() == basic_type::TYPE_DOUBLE)
