@@ -44,7 +44,7 @@ namespace pwn {
     void do_neg_node(cdk::neg_node * const node, int lvl);
 
   protected:
-    void processBinaryExpression(cdk::binary_expression_node * const node, int lvl, const basic_type::type accepedTypes[]);
+    void processBinaryExpression(cdk::binary_expression_node * const node, int lvl, basic_type::type accepedTypes[], int size);
 		void processMulDivMod(cdk::binary_expression_node * const node, int lvl);
 		void processCompare(cdk::binary_expression_node * const node, int lvl);
 		void processEquality(cdk::binary_expression_node * const node, int lvl);
@@ -53,7 +53,7 @@ namespace pwn {
 
 
 	protected:
-		bool isCompatibleType(basic_type::type type, const basic_type::type accepedTypes[]);
+		bool isCompatibleType(basic_type::type type, basic_type::type accepedTypes[], int size);
   public:
     void do_add_node(cdk::add_node * const node, int lvl);
     void do_sub_node(cdk::sub_node * const node, int lvl);

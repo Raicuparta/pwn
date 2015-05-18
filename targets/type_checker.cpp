@@ -9,9 +9,13 @@ node->type()->name() != basic_type::TYPE_UNSPEC) return; }
 
 
 //metodo auxiliar para verificar se um tipo e' pertence a um conjunto de tipos
-inline bool pwn::type_checker::isCompatibleType(basic_type::type type, const basic_type::type accepedTypes[]) {
-  return true;
-	//TODO
+inline bool pwn::type_checker::isCompatibleType(basic_type::type type, basic_type::type accepedTypes[], int size) {
+  
+	for (int i = 0; i < size; i++) {
+		if (accepedTypes[i] != type) return false;
+	}
+	
+	return true;
 }
 
 
@@ -30,21 +34,21 @@ void pwn::type_checker::do_string_node(cdk::string_node * const node, int lvl) {
 
 //---------------------------------------------------------------------------
 
-inline void pwn::type_checker::processBinaryExpression(cdk::binary_expression_node * const node, int lvl, const basic_type::type acceptedTypes[]) {
+inline void pwn::type_checker::processBinaryExpression(cdk::binary_expression_node * const node, int lvl, basic_type::type acceptedTypes[], int size) {
   ASSERT_UNSPEC;
   node->left()->accept(this, lvl + 2);
-  if (!isCompatibleType(node->left()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->left()->type()->name(), acceptedTypes, size))
     throw std::string("wrong type in left argument of binary expression");
   
   node->right()->accept(this, lvl + 2);
-  if (!isCompatibleType(node->right()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->right()->type()->name(), acceptedTypes, size))
     throw std::string("wrong type in right argument of binary expression");
 }
 
 
 void pwn::type_checker::do_add_node(cdk::add_node * const node, int lvl) {
-  const basic_type::type acceptedTypes[3] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE, basic_type::TYPE_POINTER};
-  processBinaryExpression(node, lvl, acceptedTypes);
+  basic_type::type acceptedTypes[3] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE, basic_type::TYPE_POINTER};
+  processBinaryExpression(node, lvl, acceptedTypes, 3);
   
   basic_type* newType = new basic_type(4, basic_type::TYPE_INT);
   
@@ -80,8 +84,8 @@ void pwn::type_checker::do_add_node(cdk::add_node * const node, int lvl) {
 }
 
 void pwn::type_checker::do_sub_node(cdk::sub_node * const node, int lvl) {
-  const basic_type::type acceptedTypes[3] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE, basic_type::TYPE_POINTER};
-  processBinaryExpression(node, lvl, acceptedTypes);
+  basic_type::type acceptedTypes[3] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE, basic_type::TYPE_POINTER};
+  processBinaryExpression(node, lvl, acceptedTypes, 3);
   
   basic_type* newType = new basic_type(4, basic_type::TYPE_INT);
   
@@ -112,8 +116,8 @@ void pwn::type_checker::do_sub_node(cdk::sub_node * const node, int lvl) {
 
 
 inline void pwn::type_checker::processMulDivMod(cdk::binary_expression_node * const node, int lvl) {
-  const basic_type::type acceptedTypes[2] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
-  processBinaryExpression(node, lvl, acceptedTypes);
+  basic_type::type acceptedTypes[2] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
+  processBinaryExpression(node, lvl, acceptedTypes, 2);
   
   basic_type* newType = new basic_type(4, basic_type::TYPE_INT);
   
@@ -141,8 +145,8 @@ void pwn::type_checker::do_mod_node(cdk::mod_node * const node, int lvl) {
 }
 
 inline void pwn::type_checker::processCompare(cdk::binary_expression_node * const node, int lvl) {
-  const basic_type::type acceptedTypes[2] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
-  processBinaryExpression(node, lvl, acceptedTypes);
+  basic_type::type acceptedTypes[2] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
+  processBinaryExpression(node, lvl, acceptedTypes, 2);
   node->type(new basic_type(4, basic_type::TYPE_INT));
 }
 
@@ -161,8 +165,8 @@ void pwn::type_checker::do_gt_node(cdk::gt_node * const node, int lvl) {
 
 
 inline void pwn::type_checker::processEquality(cdk::binary_expression_node * const node, int lvl) {
-  const basic_type::type acceptedTypes[3] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE, basic_type::TYPE_POINTER};
-  processBinaryExpression(node, lvl, acceptedTypes);
+  basic_type::type acceptedTypes[3] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE, basic_type::TYPE_POINTER};
+  processBinaryExpression(node, lvl, acceptedTypes, 3);
   node->type(new basic_type(4, basic_type::TYPE_INT));
 }
 
@@ -245,8 +249,8 @@ void pwn::type_checker::do_repeat_node(pwn::repeat_node * const node, int lvl) {
 
 
 inline void pwn::type_checker::processAndOr(cdk::binary_expression_node * const node, int lvl) {
-  const basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
-  processBinaryExpression(node, lvl, acceptedTypes);
+  basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
+  processBinaryExpression(node, lvl, acceptedTypes, 1);
   node->type(new basic_type(4, basic_type::TYPE_INT));
 }
 
@@ -259,9 +263,9 @@ void pwn::type_checker::do_or_node(pwn::or_node * const node, int lvl) {
 }
 
 void pwn::type_checker::do_stop_node(pwn::stop_node * const node, int lvl) {
-  const basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
+  basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
   node->value()->accept(this, lvl + 4);
-  if (!isCompatibleType(node->value()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->value()->type()->name(), acceptedTypes, 1))
     throw std::string("wrong type in argument of STOP");
 }
 
@@ -272,9 +276,9 @@ void pwn::type_checker::do_return_node(pwn::return_node * const node, int lvl) {
 
 inline void pwn::type_checker::processIdSym(cdk::unary_expression_node * const node, int lvl) {
   ASSERT_UNSPEC;
-	const basic_type::type acceptedTypes[2] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
+	basic_type::type acceptedTypes[2] = {basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
   node->argument()->accept(this, lvl + 4);
-  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes, 2))
     throw std::string("wrong type in argument of identity/symetric expression");
 	
   node->type(node->argument()->type());
@@ -289,18 +293,18 @@ void pwn::type_checker::do_neg_node(cdk::neg_node * const node, int lvl) {
 }
 
 void pwn::type_checker::do_next_node(pwn::next_node * const node, int lvl) {
-	const basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
+	basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
   node->value()->accept(this, lvl + 2);
-  if (!isCompatibleType(node->value()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->value()->type()->name(), acceptedTypes, 1))
     throw std::string("wrong type in argument of NEXT");
 }
 void pwn::type_checker::do_noob_node(pwn::noob_node * const node, int lvl) {
   node->type(new basic_type(4, basic_type::TYPE_POINTER));
 }
 void pwn::type_checker::do_index_node(pwn::index_node * const node, int lvl) {
-  const basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
+  basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
   node->value()->accept(this, lvl + 2);
-  if (!isCompatibleType(node->value()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->value()->type()->name(), acceptedTypes, 1))
     throw std::string("wrong type in argument of STOP");
 	
 	node->var()->accept(this, lvl + 2);
@@ -357,16 +361,16 @@ void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lv
 
 
 void pwn::type_checker::do_println_node(pwn::println_node * const node, int lvl) {
-	const basic_type::type acceptedTypes[3] = {basic_type::TYPE_STRING, basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
+	basic_type::type acceptedTypes[3] = {basic_type::TYPE_STRING, basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
   node->argument()->accept(this, lvl + 4);
-  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes, 3))
     throw std::string("wrong type in argument of println expression");
 }
 
 void pwn::type_checker::do_print_node(pwn::print_node * const node, int lvl) {
-	const basic_type::type acceptedTypes[3] = {basic_type::TYPE_STRING, basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
+	basic_type::type acceptedTypes[3] = {basic_type::TYPE_STRING, basic_type::TYPE_INT, basic_type::TYPE_DOUBLE};
   node->argument()->accept(this, lvl + 4);
-  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes, 3))
     throw std::string("wrong type in argument of println expression");
 }
 
@@ -376,9 +380,9 @@ void pwn::type_checker::do_maloc_node(pwn::maloc_node * const node, int lvl) {
 
 void pwn::type_checker::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
 	ASSERT_UNSPEC;
-	const basic_type::type acceptedTypes[1] = {basic_type::TYPE_DOUBLE};
+	basic_type::type acceptedTypes[1] = {basic_type::TYPE_DOUBLE};
   node->argument()->accept(this, lvl + 4);
-  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes, 1))
     throw std::string("wrong type in argument of memory address (?) expression");
 	
   node->type(new basic_type(4, basic_type::TYPE_POINTER));
@@ -386,9 +390,9 @@ void pwn::type_checker::do_mem_address_node(pwn::mem_address_node * const node, 
 
 void pwn::type_checker::do_not_node(pwn::not_node * const node, int lvl) {
 	ASSERT_UNSPEC;
-	const basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
+	basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
   node->argument()->accept(this, lvl + 4);
-  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes))
+  if (!isCompatibleType(node->argument()->type()->name(), acceptedTypes, 1))
     throw std::string("wrong type in argument of NOT expression");
 		
 	node->type(node->argument()->type());
