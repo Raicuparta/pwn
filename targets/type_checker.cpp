@@ -11,6 +11,7 @@ node->type()->name() != basic_type::TYPE_UNSPEC) return; }
 //metodo auxiliar para verificar se um tipo e' pertence a um conjunto de tipos
 inline bool pwn::type_checker::isCompatibleType(basic_type::type type, const basic_type::type accepedTypes[]) {
   return true;
+	//TODO
 }
 
 
