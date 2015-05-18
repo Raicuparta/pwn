@@ -15,7 +15,6 @@
 %x X_STRING X_COMMENT
 %%
 
-					{ set_debug(1);}
 
 
 ">="                    return tGE; 

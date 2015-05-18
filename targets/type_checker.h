@@ -40,9 +40,6 @@ namespace pwn {
     void do_integer_node(cdk::integer_node * const node, int lvl);
     void do_string_node(cdk::string_node * const node, int lvl);
 
-  protected:
-    void processUnaryExpression(cdk::unary_expression_node * const node, int lvl);
-
   public:
     void do_neg_node(cdk::neg_node * const node, int lvl);
 
@@ -50,6 +47,9 @@ namespace pwn {
     void processBinaryExpression(cdk::binary_expression_node * const node, int lvl, const basic_type::type accepedTypes[]);
 		void processMulDivMod(cdk::binary_expression_node * const node, int lvl);
 		void processCompare(cdk::binary_expression_node * const node, int lvl);
+		void processEquality(cdk::binary_expression_node * const node, int lvl);
+		void processAndOr(cdk::binary_expression_node * const node, int lvl);
+		void processIdSym(cdk::unary_expression_node * const node, int lvl);
 
 
 	protected:
