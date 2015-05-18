@@ -184,24 +184,31 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
   _pf.LABEL(sName);
   _pf.ENTER(0);  // Simple doesn't implement local variables
 
-  if(node->name()->arguments() != NULL)
+	  // these are just a few library function imports
+
+	
+	
+  if(node->name()->arguments() != NULL) { std::cout<<"--------------ARGS----------------"<<std::endl;
     node->name()->arguments()->accept(this, lvl); //argumentos da funcao
-  if(node->instructions() != NULL)
+	}
+  if(node->instructions() != NULL) { std::cout<<"--------------Intres----------------"<<std::endl;
     node->instructions()->accept(this, lvl); //corpo da funcao
-  if(node->value() != NULL)
+	}
+  if(node->value() != NULL)  { std::cout<<"--------------Vales----------------"<<std::endl;
     node->value()->accept(this, lvl); //retorno por omissao da funcao
+	}
 
   // end the main function
   _pf.INT(0);
   _pf.POP();
   _pf.LEAVE();
   _pf.RET();
-
-  // these are just a few library function imports
+	
   _pf.EXTERN("readi");
   _pf.EXTERN("printi");
   _pf.EXTERN("prints");
   _pf.EXTERN("println");
+
 }
 
 //---------------------------------------------------------------------------
@@ -386,6 +393,7 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
   //TODO
 }
 void pwn::postfix_writer::do_println_node(pwn::println_node * const node, int lvl) {
+	std::cout<<"--------------PRINTLN----------------"<<std::endl;
   CHECK_TYPES(_compiler, _symtab, node);
   node->argument()->accept(this, lvl); // determine the value to print
   if (node->argument()->type()->name() == basic_type::TYPE_INT) {
