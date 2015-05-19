@@ -296,7 +296,8 @@ void pwn::type_checker::do_func_decl_node(pwn::func_decl_node * const node, int 
 	//ASSERT_UNSPEC;
 	int val = 0;
 	std::string * qualifier = node->qualifier();
-	if (strcmp(qualifier->c_str(), "local") == 0) {
+  const std::string &qual = *qualifier;
+	if (qual == "local") {
 		val = 0;
 	}
   const std::string &id = *node->name();
@@ -340,7 +341,8 @@ void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lv
   //ASSERT_UNSPEC;
 	int val = -1;
 	std::string * qualifier = node->qualifier();
-	if (strcmp(qualifier->c_str(), "local") == 0) {
+  const std::string &qual = * qualifier;
+	if (qual == "local"){
 		val = 0;
 	}
 	

@@ -167,11 +167,12 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
 	
 	
 	std::string * name = node->name()->name(); //nome da funcao
-	if(strcmp(name->c_str(), "pwn")==0){
+	const std::string &cName = *name;
+	if(cName == "pwn"){
 		name = new std::string("_main");
 		
 	}
-	else if(strcmp(name->c_str(), "_main")==0){
+	else if(cName == "_main"){
 		name = new std::string("._main");
 	}
 	
@@ -394,10 +395,11 @@ void pwn::postfix_writer::do_func_decl_node(pwn::func_decl_node * const node, in
 	
 	
 	std::string * name = node->name(); //nome da funcao
-	if(strcmp(name->c_str(), "pwn")==0){
+	const std::string &cName = *name;
+	if(cName == "pwn"){
 		name = new std::string("_main");
 	}
-	else if(strcmp(name->c_str(), "_main")==0){
+	else if(cName == "_main"){
 		name = new std::string("._main");
 	}
 	
@@ -418,13 +420,15 @@ void pwn::postfix_writer::do_func_call_node(pwn::func_call_node * const node, in
 	_pf.CALL(fName);
 	_pf.TRASH(sc.size());
 	
-	if(strcmp(name->c_str(), "pwn")==0){
+	const std::string &cName = * name;
+	if(cName == "pwn"){
 		name = new std::string("_main");
 	}
-	else if(strcmp(name->c_str(), "_main")==0){
+	else if(cName == "_main"){
 		name = new std::string("._main");
 	}
 	const std::string &sName = * name;
+
 	std::shared_ptr<pwn::symbol> symbol = _symtab.find(sName);
 	
 	if( (symbol->type()->name() == basic_type::TYPE_INT) || (symbol->type()->name() == basic_type::TYPE_STRING) )
@@ -460,7 +464,8 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 	std::cout<<"--------------VAR DECL PF ----------------" << node->type()->name() <<std::endl; 
 	
 	std::string * qualifier = node->qualifier();
-	if (strcmp(qualifier->c_str(), "import") == 0) { //TODO remove this
+	const std::string &qual = * qualifier;
+	if (qual == "import") { //TODO remove this
 		_pf.EXTERN(*node->name()->var());
 		return;
 	}
