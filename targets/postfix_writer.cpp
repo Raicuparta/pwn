@@ -4,6 +4,7 @@
 #include <sstream>
 #include "targets/type_checker.h"
 #include "targets/postfix_writer.h"
+#include "targets/size_stack.h"
 #include "ast/all.h"  // all.h is automatically generated
 
 //---------------------------------------------------------------------------
@@ -173,10 +174,13 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 		 }
 		 
 		 const std::string &sName = *name;
+
+		 size_stack sc(_compiler, node);
+
 		 _pf.GLOBAL(sName, _pf.FUNC());
 		 _pf.ALIGN();
 		 _pf.LABEL(sName);
-		 _pf.ENTER(0);  // Simple doesn't implement local variables
+		 _pf.ENTER(sc.size());  // Simple doesn't implement local variables
 		 
 		 // these are just a few library function imports
 		 _pf.EXTERN("readi");
@@ -400,7 +404,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 	 void pwn::postfix_writer::do_func_call_node(pwn::func_call_node * const node, int lvl) {
 		 CHECK_TYPES(_compiler, _symtab, node);
 		 
-		 // stackcounter sc(node, _compiler);
+		 size_stack sc(_compiler, node);
 		 std::string * name = node->name(); //nome da funcao
 		 const std::string &fName = * name;
 		 if(node->arguments() != NULL){
@@ -408,7 +412,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 		 }
 		 
 		 _pf.CALL(fName);
-		 //_pf.TRASH(sc.size());
+		 _pf.TRASH(sc.size());
 		 
 		 if(strcmp(name->c_str(), "pwn")==0){
 			 name = new std::string("_main");

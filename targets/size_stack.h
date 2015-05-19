@@ -27,7 +27,7 @@ namespace pwn {
       os().flush();
     }
 
-  private:
+  public:
     /** Method used to generate sequential labels. */
    unsigned long int size(){
     return _size;
