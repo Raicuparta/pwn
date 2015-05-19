@@ -11,6 +11,12 @@
 //     THIS IS THE VISITOR'S DEFINITION
 //---------------------------------------------------------------------------
 
+inline bool isLeftValue(cdk::expression_node * const node) {
+	if(node->name() == "var_node" || node->name() == "index_node")
+		return true;
+	return true;
+}
+
 void pwn::postfix_writer::do_sequence_node(cdk::sequence_node * const node, int lvl) {
 	for (size_t i = 0; i < node->size(); i++) {
 		node->node(i)->accept(this, lvl);
@@ -230,6 +236,10 @@ void pwn::postfix_writer::do_print_node(pwn::print_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
 	std::cout<<"--------------PRINT_NODE----------------"<< node->argument()->type()->name() << " |?| " <<  basic_type::TYPE_INT <<std::endl;
 	node->argument()->accept(this, lvl); // determine the value to print
+	
+	if(isLeftValue(node->argument())) {
+		_pf.LOAD();
+	}
 	
 	if (node->argument()->type()->name() == basic_type::TYPE_INT) {
 		_pf.CALL("printi");
@@ -453,6 +463,7 @@ void pwn::postfix_writer::do_var_node(pwn::var_node * const node, int lvl) {
 		
 	} else if (symbol->value() == -1) { // Global variable
 		_pf.ADDR(*node->var());
+		//_pf.LOAD();
 	}
 	
 }
@@ -481,9 +492,9 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 		
 	} else if (symbol->value() == -1) { // Global variable
 		/*_pf.BSS();
-				_pf.ALIGN();
-				_pf.LABEL(*node->name()->var());
-				_pf.BYTE(node->type()->size());*/
+		_pf.ALIGN();
+		_pf.LABEL(*node->name()->var());
+		_pf.BYTE(node->type()->size());*/
 		
 		_pf.DATA();
 		_pf.ALIGN();
