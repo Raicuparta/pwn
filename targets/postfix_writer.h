@@ -18,6 +18,10 @@ namespace pwn {
     cdk::symbol_table<pwn::symbol> &_symtab;
     cdk::basic_postfix_emitter &_pf;
     int _lbl;
+		int _offset_vars = 0;
+		std::vector<std::string> _nexts;
+		std::vector<std::string> _stops;
+		
 
   public:
     postfix_writer(std::shared_ptr<cdk::compiler> compiler, cdk::symbol_table<pwn::symbol> &symtab,

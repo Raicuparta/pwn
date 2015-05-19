@@ -23,7 +23,6 @@
 	pwn::func_decl_node *func;
 	pwn::block_node * block;
 	pwn::index_node * index;
-	cdk::integer_node * in;
 	
 	basic_type			*btype;
 };
@@ -57,7 +56,7 @@
 %type <func> func
 %type <block> block
 %type <index> index
-%type <in> arg
+%type <i> arg
 
 %{
 //-- The rules below will be included in yyparse, the main parsing function.
@@ -121,8 +120,8 @@ argscall : expr	     						{ $$ = new cdk::sequence_node(LINE, $1); }
 	 | argscall ',' expr 					{ $$ = new cdk::sequence_node(LINE, $3, $1); }
 	 ;
 		
-arg : tINTEGER							{ $$ = new cdk::integer_node(LINE, $1); }
-    | 								{ $$ = new cdk::integer_node(LINE, 1); }
+arg : tINTEGER							{ $$ = $1; }
+    | 								{ $$ = 1; }
     ;
 		
 type : '#'							{ $$ = new basic_type(4, basic_type::TYPE_INT); }

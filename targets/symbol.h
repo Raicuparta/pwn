@@ -11,6 +11,7 @@ namespace pwn {
       basic_type *_type;
       std::string _name;
       long _value; // hack!
+      int _offset;
 
     public:
       inline symbol( basic_type *type, const std::string &name, long value) :
@@ -33,6 +34,13 @@ namespace pwn {
       inline long value(long v) {
         return _value = v;
       }
+      inline int offset(int offset) {
+				return _offset = offset;
+			}
+			inline int offset() {
+				return _offset;
+			}
+      
     };
 
 } // pwn

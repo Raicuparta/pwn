@@ -6,15 +6,15 @@
 namespace pwn {
   
   class stop_node: public cdk::basic_node {
-    cdk::expression_node * _value;
+    int _value;
     
   public:
-    inline stop_node(int lineno,  cdk::expression_node * value) :
+    inline stop_node(int lineno,  int value) :
     cdk::basic_node(lineno), _value(value) {
     }
     
   public:
-    inline  cdk::expression_node * value() {
+    inline int value() {
       return _value;
     }
     
