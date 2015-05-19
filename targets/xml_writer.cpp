@@ -203,7 +203,7 @@ void pwn::xml_writer::do_repeat_node(pwn::repeat_node * const node, int lvl) {
 void pwn::xml_writer::do_stop_node(pwn::stop_node * const node, int lvl) {
   openTag(node, lvl);
   openTag("stop", lvl + 2);
-  node->value()->accept(this, lvl + 4);
+  //node->value()->accept(this, lvl + 4);
   closeTag("stop", lvl + 2);
   closeTag(node, lvl);
 }
@@ -231,7 +231,7 @@ void pwn::xml_writer::do_identity_node(pwn::identity_node * const node, int lvl)
 void pwn::xml_writer::do_next_node(pwn::next_node * const node, int lvl) {
   openTag(node, lvl);
   openTag("next", lvl + 2);
-  node->value()->accept(this, lvl + 4);
+  //node->value()->accept(this, lvl + 4);
   closeTag("next", lvl + 2);
   closeTag(node, lvl);
 }

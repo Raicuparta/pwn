@@ -320,7 +320,7 @@ void pwn::type_checker::do_func_decl_node(pwn::func_decl_node * const node, int 
 	}
   const std::string &id = *node->name();
   if (!_symtab.find(id)) {
-    _symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, -1)); // put in the symbol table
+    _symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)); // put in the symbol table
   } else {
     throw id + " redeclaration";
   }
