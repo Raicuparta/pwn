@@ -294,7 +294,7 @@ void pwn::type_checker::do_block_node(pwn::block_node * const node, int lvl) {
 }
 void pwn::type_checker::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
 	//ASSERT_UNSPEC;
-	int val = -1;
+	int val = 0;
 	std::string * qualifier = node->qualifier();
 	if (strcmp(qualifier->c_str(), "local") == 0) {
 		val = 0;
