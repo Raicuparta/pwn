@@ -12,11 +12,10 @@ node->type()->name() != basic_type::TYPE_UNSPEC) return; }
 inline bool pwn::type_checker::isCompatibleType(basic_type::type type, basic_type::type accepedTypes[], int size) {
   
 	for (int i = 0; i < size; i++) {
-		if (accepedTypes[i] != type) return false;
+		if (accepedTypes[i] == type) return true;
 	}
-	//TODO
 	
-	return true;
+	return false;
 }
 
 
