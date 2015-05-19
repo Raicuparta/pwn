@@ -10,6 +10,11 @@
 //     THIS IS THE VISITOR'S DEFINITION
 //---------------------------------------------------------------------------
 
+inline bool isLeftValue(cdk::expression_node * const node) {
+	std::string name(node->name());
+	return ((name == "Var") || (name == "Index")); //TODO
+}
+
 void pwn::postfix_writer::do_sequence_node(cdk::sequence_node * const node, int lvl) {
 	for (size_t i = 0; i < node->size(); i++) {
 		node->node(i)->accept(this, lvl);
@@ -478,12 +483,13 @@ void pwn::postfix_writer::do_println_node(pwn::println_node * const node, int lv
 void pwn::postfix_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
 	
-	if(node->type()->subtype()->name() == ExpressionType::TYPE_UNSPEC) {
+	/*if(node->type()->subtype()->name() == ExpressionType::TYPE_UNSPEC) {
 		// Fetch correct type from parent assignment
 		node->type()->_subtype = node->parent_assignment()->type()->subtype();
 	}
+	
 	// Place the size of the elements to alloc space for
-	_pf.INT(node->type()->subtype()->size());
+	_pf.INT(node->type()->size());
 	// Visit argument to get number of elements
 	node->argument()->accept(this, lvl+1);
 	// If the argument is a left value, it only places its address
@@ -497,7 +503,7 @@ void pwn::postfix_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
 	// Do the allocation (reserves space at the top of the stack!)
 	_pf.ALLOC();
 	// Push the address of the allocated space to the top of the stack
-	_pf.SP(); // Which is the stack pointer
+	_pf.SP(); // Which is the stack pointer*/
 }
 void pwn::postfix_writer::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
 	

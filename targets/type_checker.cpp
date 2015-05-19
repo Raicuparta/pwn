@@ -11,9 +11,9 @@ node->type()->name() != basic_type::TYPE_UNSPEC) return; }
 //metodo auxiliar para verificar se um tipo e' pertence a um conjunto de tipos
 inline bool pwn::type_checker::isCompatibleType(basic_type::type type, basic_type::type accepedTypes[], int size) {
   
-	/*for (int i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		if (accepedTypes[i] != type) return false;
-	}*/
+	}
 	//TODO
 	
 	return true;
@@ -264,10 +264,7 @@ void pwn::type_checker::do_or_node(pwn::or_node * const node, int lvl) {
 }
 
 void pwn::type_checker::do_stop_node(pwn::stop_node * const node, int lvl) {
-  basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
-  node->value()->accept(this, lvl + 4);
-  if (!isCompatibleType(node->value()->type()->name(), acceptedTypes, 1))
-    throw std::string("wrong type in argument of STOP");
+  //no types to check
 }
 
 void pwn::type_checker::do_return_node(pwn::return_node * const node, int lvl) {
@@ -294,10 +291,7 @@ void pwn::type_checker::do_neg_node(cdk::neg_node * const node, int lvl) {
 }
 
 void pwn::type_checker::do_next_node(pwn::next_node * const node, int lvl) {
-	basic_type::type acceptedTypes[1] = {basic_type::TYPE_INT};
-  node->value()->accept(this, lvl + 2);
-  if (!isCompatibleType(node->value()->type()->name(), acceptedTypes, 1))
-    throw std::string("wrong type in argument of NEXT");
+	//no types to check
 }
 void pwn::type_checker::do_noob_node(pwn::noob_node * const node, int lvl) {
   node->type(new basic_type(4, basic_type::TYPE_POINTER));
