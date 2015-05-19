@@ -54,8 +54,10 @@
 
 <X_STRING>\\\"         			*yylval.s += yytext + 1;
 <X_STRING>"\\"        			*yylval.s += yytext + 1;
-<X_STRING>\\[nrt]		   	*yylval.s += yytext;
-<X_STRING>\\[0-9a-fA-F]{1,2}		*yylval.s += yytext;
+<X_STRING>\\n		   	*yylval.s += "\n";
+<X_STRING>\\r		   	*yylval.s += "\r";
+<X_STRING>\\t		   	*yylval.s += "\t";
+<X_STRING>\\[0-9a-fA-F]{1,2}		*yylval.s += strtol(yytext +1, nullptr, 16);
 
 <X_STRING>\0.*\"	   		yy_pop_state(); return tSTRING;
 <X_STRING>.            			*yylval.s += yytext;

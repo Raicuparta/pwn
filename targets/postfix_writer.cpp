@@ -171,10 +171,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 		 std::string * name = node->name()->name(); //nome da funcao
 		 if(strcmp(name->c_str(), "pwn")==0){
 			 name = new std::string("_main");
-			 _pf.EXTERN("readi");
-			 _pf.EXTERN("printi");
-			 _pf.EXTERN("prints");
-			 _pf.EXTERN("println");
+
 		 }
 		 else if(strcmp(name->c_str(), "_main")==0){
 			 name = new std::string("._main");
@@ -187,7 +184,11 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 		 _pf.ENTER(0);  // Simple doesn't implement local variables
 		 
 		 // these are just a few library function imports
-		 
+		 _pf.EXTERN("readi");
+		 _pf.EXTERN("printi");
+		 _pf.EXTERN("prints");
+		 _pf.EXTERN("println");
+
 		 if(node->name()->arguments() != NULL) { std::cout<<"--------------ARGS----------------"<<std::endl;
 		 node->name()->arguments()->accept(this, lvl); //argumentos da funcao
 		 }
