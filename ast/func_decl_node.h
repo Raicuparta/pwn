@@ -9,10 +9,11 @@ namespace pwn {
     std::string * _name;
     basic_type *_type;
     cdk::sequence_node *_arguments;
-
+    std::string * _qualifier;
+		
   public:
-    inline func_decl_node(int lineno,  std::string  * name,  basic_type *type, cdk::sequence_node *arguments) :
-        cdk::expression_node(lineno),  _name(name), _type(type), _arguments(arguments) {
+    inline func_decl_node(int lineno,  std::string  * name,  basic_type *type, cdk::sequence_node *arguments, std::string * qualifier) :
+        cdk::expression_node(lineno),  _name(name), _type(type), _arguments(arguments), _qualifier(qualifier) {
     }
 
   public:
@@ -24,6 +25,9 @@ namespace pwn {
     }
     inline cdk::sequence_node *arguments() {
       return _arguments;
+    }
+		inline std::string * qualifier() {
+      return _qualifier;
     }
 
     void accept(basic_ast_visitor *sp, int level) {

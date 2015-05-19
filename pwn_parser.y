@@ -85,14 +85,14 @@ decl : vardecl ';' 						{ $$ = $1; }
      | funcdecl							{ $$ = $1; }
      ;
 		
-vardecl : qualifier type var %prec LOWER_THAN_ELSE		{ $$ = new pwn::var_decl_node(LINE, $3, $2); }
-	| qualifier type var '=' expr				{ $$ = new pwn::assignment_node(LINE, new pwn::var_decl_node(LINE, $3, $2), $3);}
+vardecl : qualifier type var %prec LOWER_THAN_ELSE		{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1); }
+	| qualifier type var '=' expr				{ $$ = new pwn::assignment_node(LINE, new pwn::var_decl_node(LINE, $3, $2, $1), $3);}
 	;
 
-funcdecl : qualifier func %prec LOWER_THAN_ELSE			{ $$ = new pwn::func_def_node(LINE, $2, nullptr, nullptr, $1); }
-	 |  qualifier func '=' literal				{ $$ = new pwn::func_def_node(LINE, $2, nullptr, $4, $1); }
-	 |  qualifier func block				{ $$ = new pwn::func_def_node(LINE, $2, $3, nullptr, $1); }
-	 |  qualifier func '=' literal block			{ $$ = new pwn::func_def_node(LINE, $2, $5, $4, $1); }
+funcdecl : func %prec LOWER_THAN_ELSE			{ $$ = new pwn::func_def_node(LINE, $1, nullptr, nullptr); }
+	 | func '=' literal				{ $$ = new pwn::func_def_node(LINE, $1, nullptr, $3); }
+	 | func block				{ $$ = new pwn::func_def_node(LINE, $1, $2, nullptr); }
+	 | func '=' literal block			{ $$ = new pwn::func_def_node(LINE, $1, $4, $3); }
 	 ;
 		
 funcall : tIDENTIFIER '(' argscall ')'				{ $$ = new pwn::func_call_node(LINE, $1, $3); }
@@ -107,10 +107,10 @@ qualifier : tLOCAL						{$$ = new std::string("local"); }
 var :  tIDENTIFIER %prec LOWER_THAN_ELSE			{ $$ = new pwn::var_node(LINE, $1); }	
     ;
 		
-func : type tIDENTIFIER '(' ')'					{ $$ = new pwn::func_decl_node(LINE, $2, $1, nullptr); }
-     | type tIDENTIFIER 	'(' argsdecl ')'		{ $$ = new pwn::func_decl_node(LINE, $2, $1,$4 ); }
-     | '!' tIDENTIFIER '(' ')'					{ $$ = new pwn::func_decl_node(LINE, $2, new basic_type(4, basic_type::TYPE_VOID), nullptr); }
-     | '!' tIDENTIFIER 	'(' argsdecl ')'			{ $$ = new pwn::func_decl_node(LINE, $2, new basic_type(4, basic_type::TYPE_VOID),$4 ); }
+func : qualifier type tIDENTIFIER '(' ')'					{ $$ = new pwn::func_decl_node(LINE, $3, $2, nullptr, $1); }
+     | qualifier type tIDENTIFIER 	'(' argsdecl ')'		{ $$ = new pwn::func_decl_node(LINE, $3, $2, $5, $1); }
+     | qualifier '!' tIDENTIFIER '(' ')'					{ $$ = new pwn::func_decl_node(LINE, $3, new basic_type(4, basic_type::TYPE_VOID), nullptr, $1); }
+     | qualifier '!' tIDENTIFIER 	'(' argsdecl ')'			{ $$ = new pwn::func_decl_node(LINE, $3, new basic_type(4, basic_type::TYPE_VOID), $5, $1); }
      ;
 	
 argsdecl : vardecl	     					{ $$ = new cdk::sequence_node(LINE, $1); }

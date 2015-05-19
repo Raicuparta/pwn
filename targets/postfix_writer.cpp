@@ -348,14 +348,6 @@ void pwn::postfix_writer::do_func_decl_node(pwn::func_decl_node * const node, in
   
   const std::string &sName = *name;
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(sName);
-  
-  if (symbol == NULL){
-		std::cout << "------ INSERTING " << sName << "-------" << std::endl;
-    _symtab.insert(sName, std::make_shared<pwn::symbol> (node->type(), sName, -1));    
-  }
-  else {
-    throw sName + "redeclaration";
-  }
 }
 void pwn::postfix_writer::do_func_call_node(pwn::func_call_node * const node, int lvl) {
   CHECK_TYPES(_compiler, _symtab, node);
@@ -387,10 +379,46 @@ void pwn::postfix_writer::do_func_call_node(pwn::func_call_node * const node, in
   
 }
 void pwn::postfix_writer::do_var_node(pwn::var_node * const node, int lvl) {
-  //TODO
+	CHECK_TYPES(_compiler, _symtab, node);
+	
+	
+	/*if(s->symbolType() == "LOCAL VARIABLE") { // THIS IS AWFUL!
+		LocalVariableSymbol *lvs = (LocalVariableSymbol*) s;
+		_pf.LOCAL(lvs->local_offset());
+	}
+	
+	if(s->symbolType() == "GLOBAL VARIABLE") { // THIS IS STILL AWFUL!
+		GlobalVariableSymbol *gvs = (GlobalVariableSymbol*) s;
+		_pf.ADDR(gvs->label());
+	}*/
+	
+	
+  /*const std::string &id = *node->var();
+  std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
+  basic_type type = *symbol->type();
+	
+	if (type->name() == basic_type::TYPE_INT) {
+		
+	} else if (type->name() == basic_type::TYPE_DOUBLE) {
+		
+	} else if (type->name() == basic_type::TYPE_STRING) {
+		
+	} else if (type->name() == basic_type::TYPE_STRING) {
+		
+	}*/
+  
 }
 void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
-  //TODO
+	CHECK_TYPES(_compiler, _symtab, node);
+	
+	std::string * qualifier = node->qualifier();
+	if (strcmp(qualifier->c_str(), "import") == 0) {
+		_pf.EXTERN(*node->name()->var());
+		return;
+	}
+	
+	
+
 }
 void pwn::postfix_writer::do_println_node(pwn::println_node * const node, int lvl) {
 	std::cout<<"--------------PRINTLN----------------"<<std::endl;

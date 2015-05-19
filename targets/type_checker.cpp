@@ -1,5 +1,5 @@
 // $Id: type_checker.cpp,v 1.6 2015/04/14 10:00:27 ist173639 Exp $ -*- c++ -*-
-#include <string>
+#include <string.h>
 #include "targets/type_checker.h"
 #include "ast/all.h"  // automatically generated
 
@@ -319,9 +319,16 @@ void pwn::type_checker::do_block_node(pwn::block_node * const node, int lvl) {
 }
 void pwn::type_checker::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
 	//ASSERT_UNSPEC;
+	int val = -1;
+	std::string * qualifier = node->qualifier();
+	if (strcmp(qualifier->c_str(), "local") == 0) {
+		val = 0;
+	}
   const std::string &id = *node->name();
   if (!_symtab.find(id)) {
     _symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, -1)); // put in the symbol table
+  } else {
+    throw id + " redeclaration";
   }
 }
 void pwn::type_checker::do_func_def_node(pwn::func_def_node * const node, int lvl) {
@@ -354,9 +361,15 @@ void pwn::type_checker::do_var_node(pwn::var_node * const node, int lvl) {
 
 void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
   ASSERT_UNSPEC;
+	int val = -1;
+	std::string * qualifier = node->qualifier();
+	if (strcmp(qualifier->c_str(), "local") == 0) {
+		val = 0;
+	}
+	
   const std::string &id = *node->name()->var();
   if (!_symtab.find(id)) {
-    _symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, -1)); // put in the symbol table
+    _symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)); // put in the symbol table
   }
   
   node->name()->type(node->type());
