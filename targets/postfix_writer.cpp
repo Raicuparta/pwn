@@ -174,9 +174,9 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 		 }
 		 
 		 const std::string &sName = *name;
-
+		 
 		 size_stack sc(_compiler, node);
-
+		 
 		 _pf.GLOBAL(sName, _pf.FUNC());
 		 _pf.ALIGN();
 		 _pf.LABEL(sName);
@@ -226,6 +226,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 	 void pwn::postfix_writer::do_print_node(pwn::print_node * const node, int lvl) {
 		 CHECK_TYPES(_compiler, _symtab, node);
 		 node->argument()->accept(this, lvl); // determine the value to print
+		 std::cout<<"--------------Vales----------------"<< node->argument()->type()->name() << " |?| " <<  basic_type::TYPE_INT <<std::endl;
 		 if (node->argument()->type()->name() == basic_type::TYPE_INT) {
 			 _pf.CALL("printi");
 			 _pf.TRASH(4); // delete the printed value
@@ -436,6 +437,8 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 		 const std::string &id = *node->var();
 		 std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
 		 
+		 std::cout<<"--------------VAR NODE PF ----------------" << symbol->type()->name() <<std::endl;
+		 
 		 if(symbol->value() == 0) { //Local Variable
 		_pf.LOCAL(symbol->offset());
 		
@@ -446,9 +449,10 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 }
 
 void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
+	
 	CHECK_TYPES(_compiler, _symtab, node);
 	
-	std::cout<<"------------DECLING------------"<<std::endl;
+	std::cout<<"--------------VAR DECL PF ----------------" << node->type()->name() <<std::endl; 
 	
 	std::string * qualifier = node->qualifier();
 	if (strcmp(qualifier->c_str(), "import") == 0) {
@@ -458,7 +462,8 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 	
 	const std::string &id = *node->name()->var();
 	std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
-	
+	std::cout<<"--------------VAR DECL SYM PF ----------------" << symbol->type()->name() <<std::endl;
+		 
 	_offset_vars -= symbol->type()->size();
 	
 	symbol->offset(_offset_vars);

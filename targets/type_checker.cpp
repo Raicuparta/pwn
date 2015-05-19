@@ -313,8 +313,8 @@ void pwn::type_checker::do_func_def_node(pwn::func_def_node * const node, int lv
   const std::string &id = *node->name()->name();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
   if (!symbol) throw id + " (fundef) undeclared";
-  basic_type type = *symbol->type();
-  node->type(&type);
+  basic_type *type = symbol->type();
+  node->type(type);
   node->instructions()->accept(this, lvl + 2);
 }
 void pwn::type_checker::do_func_call_node(pwn::func_call_node * const node, int lvl) {
@@ -322,17 +322,18 @@ void pwn::type_checker::do_func_call_node(pwn::func_call_node * const node, int 
   const std::string &id = *node->name();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
   if (!symbol) throw id + " (funcall) undeclared";
-  basic_type type = *symbol->type();
-  node->type(&type);
+  basic_type *type = symbol->type();
+  node->type(type);
 }
 
 void pwn::type_checker::do_var_node(pwn::var_node * const node, int lvl) {
-  //ASSERT_UNSPEC;
+  ASSERT_UNSPEC;
   const std::string &id = *node->var();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
   if (!symbol) throw id + " (var) undeclared";
-  basic_type type = *symbol->type();
-  node->type(&type);
+  basic_type *type = symbol->type();
+	std::cout<<"--------------SETTING VAR ----------------" << type->name() <<std::endl;
+  node->type(type);
 }
 
 void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
@@ -344,12 +345,14 @@ void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lv
 	}
 	
   const std::string &id = *node->name()->var();
-		std::cout<<"--------------INSERTING VAR DECL----------------"<<std::endl;
+		std::cout<<"--------------INSERTING VAR DECL----------------" << node->type()->name() <<std::endl;
 		// put in the symbol table
     if (!_symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)))
-			throw id + " redeclared";
+			//throw id + " redeclared";
   
-  node->name()->type(node->type());
+  //node->name()->type(node->type());
+	
+	std::cout<<"--------------INSERTING VAR DO QUE TA LA DENTRO DECL----------------" << node->name()->type() <<std::endl;
 }
 
 

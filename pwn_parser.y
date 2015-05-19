@@ -87,7 +87,7 @@ decl : vardecl ';' 						{ $$ = $1; }
      | funcdecl							{ $$ = $1; }
      ;
 		
-vardecl : qualifier type var %prec LOWER_THAN_ELSE		{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1); std::cout<<"###############VARDECL###################"<<std::endl;}
+vardecl : qualifier type var %prec LOWER_THAN_ELSE		{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1); }
 	| qualifier type var '=' expr				{ $$ = new pwn::assignment_node(LINE, new pwn::var_decl_node(LINE, $3, $2, $1), $3);}
 	;
 
@@ -127,7 +127,7 @@ arg : tINTEGER							{ $$ = $1; }
     | 								{ $$ = 1; }
     ;
 		
-type : '#'							{ $$ = new basic_type(4, basic_type::TYPE_INT); }
+type : '#'							{ $$ = new basic_type(4, basic_type::TYPE_INT);  }
      |'%'							{ $$ = new basic_type(8, basic_type::TYPE_DOUBLE); }
      |'$'							{ $$ = new basic_type(4, basic_type::TYPE_STRING); }
      |'*'							{ $$ = new basic_type(4, basic_type::TYPE_POINTER); }
