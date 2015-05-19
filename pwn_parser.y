@@ -39,11 +39,14 @@
 %nonassoc LOWER_THAN_ELSE
 
 %right '=' 
-%left tGE tLE tEQ tNE '>' '<'
+%left '|'
+%left '&'
+%nonassoc '~'
+%left tEQ tNE
+%left tGE tLE  '>' '<'
 %left '+' '-' 
 %left '*' '/' '%'
-%left '&' '|'
-%left '~'
+
 %nonassoc tUNARY '{' '(' 
 
 %type <node> stmt
@@ -168,6 +171,7 @@ expr : tINTEGER                					{ $$ = new cdk::integer_node(LINE, $1); }
      | string  												{ $$ = new cdk::string_node(LINE, $1); }
 	   | '-' expr %prec tUNARY  					{ $$ = new cdk::neg_node(LINE, $2); }
      | '~' expr %prec tUNARY 			     		{ $$ = new pwn::not_node(LINE, $2); }
+     | '+' expr %prec tUNARY  					{ $$ = new pwn::identity_node(LINE, $2); }
      | expr '+' expr	     						{ $$ = new cdk::add_node(LINE, $1, $3); }
      | expr '-' expr	         				{ $$ = new cdk::sub_node(LINE, $1, $3); }
      | expr '*' expr	         				{ $$ = new cdk::mul_node(LINE, $1, $3); }
