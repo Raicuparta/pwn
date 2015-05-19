@@ -356,7 +356,8 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 				throw node->lineno() + " next arg too big";
 	 }
 	 void pwn::postfix_writer::do_noob_node(pwn::noob_node * const node, int lvl) {
-		 //TODO
+		 CHECK_TYPES(_compiler, _symtab, node);
+		 _pf.LOCAL(0);
 	 }
 	 void pwn::postfix_writer::do_index_node(pwn::index_node * const node, int lvl) {
 		 

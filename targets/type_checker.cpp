@@ -217,13 +217,6 @@ void pwn::type_checker::do_evaluation_node(pwn::evaluation_node * const node, in
 
 //---------------------------------------------------------------------------
 
-void pwn::type_checker::do_read_node(pwn::read_node * const node, int lvl) {
-  //node->argument()->accept(this, lvl + 2);
-  //TODO
-}
-
-//---------------------------------------------------------------------------
-
 void pwn::type_checker::do_while_node(cdk::while_node * const node, int lvl) {
   node->condition()->accept(this, lvl + 4);
 }
@@ -262,14 +255,6 @@ void pwn::type_checker::do_or_node(pwn::or_node * const node, int lvl) {
   processAndOr(node, lvl);
 }
 
-void pwn::type_checker::do_stop_node(pwn::stop_node * const node, int lvl) {
-  //no types to check
-}
-
-void pwn::type_checker::do_return_node(pwn::return_node * const node, int lvl) {
-  //no types to check
-}
-
 
 inline void pwn::type_checker::processIdSym(cdk::unary_expression_node * const node, int lvl) {
   ASSERT_UNSPEC;
@@ -289,9 +274,6 @@ void pwn::type_checker::do_neg_node(cdk::neg_node * const node, int lvl) {
   processIdSym(node, lvl);
 }
 
-void pwn::type_checker::do_next_node(pwn::next_node * const node, int lvl) {
-	//no types to check
-}
 void pwn::type_checker::do_noob_node(pwn::noob_node * const node, int lvl) {
   node->type(new basic_type(4, basic_type::TYPE_POINTER));
 }
