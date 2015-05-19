@@ -87,7 +87,7 @@ decl : vardecl ';' 						{ $$ = $1; }
      | funcdecl							{ $$ = $1; }
      ;
 		
-vardecl : qualifier type var %prec LOWER_THAN_ELSE		{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1); }
+vardecl : qualifier type var %prec LOWER_THAN_ELSE		{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1); std::cout<<"###############VARDECL###################"<<std::endl;}
 	| qualifier type var '=' expr				{ $$ = new pwn::assignment_node(LINE, new pwn::var_decl_node(LINE, $3, $2, $1), $3);}
 	;
 

@@ -197,8 +197,8 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 		 if(node->value() != NULL)  { std::cout<<"--------------Vales----------------"<<std::endl;
 		 node->value()->accept(this, lvl); //retorno por omissao da funcao
 		 }
-		 
 		 // end the main function
+		 
 		 _pf.INT(0);
 		 _pf.POP();
 		 _pf.LEAVE();
@@ -218,7 +218,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 			 _pf.TRASH(4); // delete the evaluated value's address
 		 }
 		 else {
-			 std::cerr << "ERROR: CANNOT HAPPEN!" << std::endl;
+			 std::cerr << "EVAL ERROR: CANNOT HAPPEN!" << std::endl;
 			 exit(1);
 		 }
 	 }
@@ -235,7 +235,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 			 _pf.TRASH(4); // delete the printed value's address
 		 }
 		 else {
-			 std::cerr << "ERROR: CANNOT HAPPEN!" << std::endl;
+			 std::cerr << "PRINT ERROR: CANNOT HAPPEN!" << std::endl;
 			 exit(1);
 		 }
 	 }
@@ -448,6 +448,8 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
 	
+	std::cout<<"------------DECLING------------"<<std::endl;
+	
 	std::string * qualifier = node->qualifier();
 	if (strcmp(qualifier->c_str(), "import") == 0) {
 		_pf.EXTERN(*node->name()->var());
@@ -460,6 +462,8 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 	_offset_vars -= symbol->type()->size();
 	
 	symbol->offset(_offset_vars);
+	
+	
 	
 }
 
@@ -476,7 +480,7 @@ void pwn::postfix_writer::do_println_node(pwn::println_node * const node, int lv
 		_pf.TRASH(4); // delete the printed value's address
 	}
 	else {
-		std::cerr << "ERROR: CANNOT HAPPEN!" << std::endl;
+		std::cerr << "PRINTLN ERROR: CANNOT HAPPEN!" << std::endl;
 		exit(1);
 	}
 	_pf.CALL("println"); // print a newline

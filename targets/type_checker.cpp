@@ -301,17 +301,18 @@ void pwn::type_checker::do_func_decl_node(pwn::func_decl_node * const node, int 
 	}
   const std::string &id = *node->name();
   if (!_symtab.find(id)) {
+		std::cout<<"--------------INSERTING FUNC DECL with id = " << id << "----------------"<<std::endl;
     _symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)); // put in the symbol table
   } else {
     throw id + " redeclaration";
   }
 }
 void pwn::type_checker::do_func_def_node(pwn::func_def_node * const node, int lvl) {
-  //ASSERT_UNSPEC;
+  ASSERT_UNSPEC;
 	node->name()->accept(this, lvl);
   const std::string &id = *node->name()->name();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
-  if (!symbol) throw id + " undeclared";
+  if (!symbol) throw id + " (fundef) undeclared";
   basic_type type = *symbol->type();
   node->type(&type);
   node->instructions()->accept(this, lvl + 2);
@@ -320,22 +321,22 @@ void pwn::type_checker::do_func_call_node(pwn::func_call_node * const node, int 
   //ASSERT_UNSPEC;
   const std::string &id = *node->name();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
-  if (!symbol) throw id + " undeclared";
+  if (!symbol) throw id + " (funcall) undeclared";
   basic_type type = *symbol->type();
   node->type(&type);
 }
 
 void pwn::type_checker::do_var_node(pwn::var_node * const node, int lvl) {
-  ASSERT_UNSPEC;
+  //ASSERT_UNSPEC;
   const std::string &id = *node->var();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
-  if (!symbol) throw id + " undeclared";
+  if (!symbol) throw id + " (var) undeclared";
   basic_type type = *symbol->type();
   node->type(&type);
 }
 
 void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
-  ASSERT_UNSPEC;
+  //ASSERT_UNSPEC;
 	int val = -1;
 	std::string * qualifier = node->qualifier();
 	if (strcmp(qualifier->c_str(), "local") == 0) {
@@ -343,9 +344,10 @@ void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lv
 	}
 	
   const std::string &id = *node->name()->var();
-  if (!_symtab.find(id)) {
-    _symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)); // put in the symbol table
-  }
+		std::cout<<"--------------INSERTING VAR DECL----------------"<<std::endl;
+		// put in the symbol table
+    if (!_symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)))
+			throw id + " redeclared";
   
   node->name()->type(node->type());
 }
