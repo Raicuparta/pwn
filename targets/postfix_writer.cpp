@@ -10,11 +10,6 @@
 //     THIS IS THE VISITOR'S DEFINITION
 //---------------------------------------------------------------------------
 
-inline bool isLeftValue(cdk::expression_node * const node) {
-	std::string name(node->name());
-	return ((name == "Var") || (name == "Index")); //TODO
-}
-
 void pwn::postfix_writer::do_sequence_node(cdk::sequence_node * const node, int lvl) {
 	for (size_t i = 0; i < node->size(); i++) {
 		node->node(i)->accept(this, lvl);
@@ -361,7 +356,8 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 				throw node->lineno() + " next arg too big";
 	 }
 	 void pwn::postfix_writer::do_noob_node(pwn::noob_node * const node, int lvl) {
-		 //TODO
+		 CHECK_TYPES(_compiler, _symtab, node);
+		 _pf.LOCAL(0);
 	 }
 	 void pwn::postfix_writer::do_index_node(pwn::index_node * const node, int lvl) {
 		 
@@ -484,27 +480,12 @@ void pwn::postfix_writer::do_println_node(pwn::println_node * const node, int lv
 void pwn::postfix_writer::do_maloc_node(pwn::maloc_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
 	
-	/*if(node->type()->subtype()->name() == ExpressionType::TYPE_UNSPEC) {
-		// Fetch correct type from parent assignment
-		node->type()->_subtype = node->parent_assignment()->type()->subtype();
-	}
-	
-	// Place the size of the elements to alloc space for
-	_pf.INT(node->type()->size());
-	// Visit argument to get number of elements
-	node->argument()->accept(this, lvl+1);
-	// If the argument is a left value, it only places its address
-	// onto the top of the stack
-	if(isLeftValue(node->argument())) {
-		// We must load its contents
-		loadNodeValue(node->argument());
-	}
-	// Multiply to get requested allocation space in bytes
-	_pf.MUL();
-	// Do the allocation (reserves space at the top of the stack!)
-	_pf.ALLOC();
-	// Push the address of the allocated space to the top of the stack
-	_pf.SP(); // Which is the stack pointer*/
+	_pf.INT(node->type()->size()); //coloca o tamanho do tipo na pilha
+	_pf.INT(node->value()); //coloca o valor na pilha
+
+	_pf.MUL(); //multiplica o valor pelo tamanho
+	_pf.ALLOC(); //alocar memoria
+	_pf.SP(); //coloca endereço do espaco alocado na pilha
 }
 void pwn::postfix_writer::do_mem_address_node(pwn::mem_address_node * const node, int lvl) {
 	
