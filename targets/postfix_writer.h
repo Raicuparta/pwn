@@ -21,6 +21,7 @@ namespace pwn {
 		int _offset_vars = 0;
 		std::vector<std::string> _nexts;
 		std::vector<std::string> _stops;
+		bool _in_function = false;
 		
 
   public:
@@ -45,9 +46,14 @@ namespace pwn {
       return oss.str();
     }
 
+    
   public:
     void do_sequence_node(cdk::sequence_node * const node, int lvl);
 
+	protected:
+		void processBinaryExpression(cdk::binary_expression_node * const node, int lvl);
+		
+		
   public:
     void do_integer_node(cdk::integer_node * const node, int lvl);
     void do_string_node(cdk::string_node * const node, int lvl);

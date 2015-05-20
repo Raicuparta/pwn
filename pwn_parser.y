@@ -87,8 +87,8 @@ decl : vardecl ';' 						{ $$ = $1; }
      | funcdecl							{ $$ = $1; }
      ;
 		
-vardecl : qualifier type var %prec LOWER_THAN_ELSE		{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1); }
-	| qualifier type var '=' expr				{ $$ = new pwn::assignment_node(LINE, new pwn::var_decl_node(LINE, $3, $2, $1), $3);}
+vardecl : qualifier type var %prec LOWER_THAN_ELSE		{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1, nullptr); }
+	| qualifier type var '=' expr				{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1, new pwn::assignment_node(LINE, $3, $5));}
 	;
 
 funcdecl : func %prec LOWER_THAN_ELSE			{ $$ = new pwn::func_def_node(LINE, $1, nullptr, nullptr); }

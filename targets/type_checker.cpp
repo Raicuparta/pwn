@@ -343,15 +343,16 @@ void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lv
 		val = 0;
 	}
 	
-  const std::string &id = *node->name()->var();
+  const std::string &id = *node->var()->var();
 		std::cout<<"--------------INSERTING VAR DECL----------------" << node->type()->name() <<std::endl;
 		// put in the symbol table
     if (!_symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)))
 			//throw id + " redeclared";
-  
-  //node->name()->type(node->type());
-	
-	std::cout<<"--------------INSERTING VAR DO QUE TA LA DENTRO DECL----------------" << node->name()->type() <<std::endl;
+		
+  basic_type *type = node->type();
+  //node->var()->type(type);
+	//node->var()->accept(this, lvl+2);
+	std::cout<<"--------------INSERTING VAR DO QUE TA LA DENTRO DECL----------------" << node->var()->type() <<std::endl;
 }
 
 

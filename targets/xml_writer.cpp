@@ -344,7 +344,7 @@ void pwn::xml_writer::do_var_decl_node(pwn::var_decl_node * const node, int lvl)
  // node->type()->accept(this, lvl + 4);
  // closeTag("type", lvl + 2);
   openTag("name", lvl + 2);
-  node->name()->accept(this, lvl + 4);
+  node->var()->accept(this, lvl + 4);
   closeTag("name", lvl + 2);
   closeTag("var_decl", lvl + 2);
   closeTag(node, lvl);
