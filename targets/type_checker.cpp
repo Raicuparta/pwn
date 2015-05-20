@@ -1,4 +1,4 @@
-// $Id: type_checker.cpp,v 1.6 2015/04/14 10:00:27 ist173639 Exp $ -*- c++ -*-
+// $Id: type_checker.cpp,v 1.10 2015/05/20 08:04:53 ist176031 Exp $ -*- c++ -*-
 #include <string.h>
 #include "targets/type_checker.h"
 #include "ast/all.h"  // automatically generated
@@ -271,6 +271,10 @@ void pwn::type_checker::do_identity_node(pwn::identity_node * const node, int lv
 	processIdSym(node, lvl);
 }
 
+void pwn::type_checker::do_inc_node(pwn::inc_node * const node, int lvl) {
+	processIdSym(node, lvl);
+}
+
 void pwn::type_checker::do_neg_node(cdk::neg_node * const node, int lvl) {
   processIdSym(node, lvl);
 }
@@ -331,8 +335,7 @@ void pwn::type_checker::do_var_node(pwn::var_node * const node, int lvl) {
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
   if (!symbol) throw id + " (var) undeclared";
   basic_type *type = symbol->type();
-	std::cout<<"--------------SETTING VAR ----------------" << type->name() <<std::endl;
-  node->type(type);
+	node->type(type);
 }
 
 void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
@@ -343,15 +346,14 @@ void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lv
 	}
 	
   const std::string &id = *node->var()->var();
-		std::cout<<"--------------INSERTING VAR DECL----------------" << val <<std::endl;
 		// put in the symbol table
-    if (!_symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)))
+    if (!_symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val))){
 			//throw id + " redeclared";
+    }
 		
   
   //node->var()->type(type);
 	//node->var()->accept(this, lvl+2);
-	std::cout<<"--------------INSERTING VAR DO QUE TA LA DENTRO DECL----------------" << node->var()->type() <<std::endl;
 }
 
 

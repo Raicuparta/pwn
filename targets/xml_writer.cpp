@@ -1,4 +1,4 @@
-// $Id: xml_writer.cpp,v 1.7 2015/04/14 10:00:27 ist173639 Exp $ -*- c++ -*-
+// $Id: xml_writer.cpp,v 1.10 2015/05/20 06:00:44 ist173639 Exp $ -*- c++ -*-
 #include <string>
 #include "targets/xml_writer.h"
 #include "targets/type_checker.h"
@@ -225,6 +225,10 @@ void pwn::xml_writer::do_return_node(pwn::return_node * const node, int lvl) {
 }
 
 void pwn::xml_writer::do_identity_node(pwn::identity_node * const node, int lvl) {
+  processUnaryExpression(node, lvl);
+}
+
+void pwn::xml_writer::do_inc_node(pwn::inc_node * const node, int lvl) {
   processUnaryExpression(node, lvl);
 }
 

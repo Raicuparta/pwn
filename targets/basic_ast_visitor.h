@@ -99,6 +99,7 @@ public:
 	virtual void do_or_node(pwn::or_node * const node, int lvl) = 0;
 	virtual void do_return_node(pwn::return_node * const node, int lvl) = 0;
 	virtual void do_identity_node(pwn::identity_node * const node, int lvl) = 0;
+	virtual void do_inc_node(pwn::inc_node * const node, int lvl) = 0;
 	virtual void do_next_node(pwn::next_node * const node, int lvl) = 0;
 	virtual void do_noob_node(pwn::noob_node * const node, int lvl) = 0;
 	virtual void do_index_node(pwn::index_node * const node, int lvl) = 0;

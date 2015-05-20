@@ -1,7 +1,7 @@
 %option c++ yyclass="pwn_scanner" outfile="pwn_scanner.cpp"
 %option debug stack noyywrap yylineno 8bit
 %{ 
-/* $Id: pwn_scanner.l,v 1.4 2015/04/14 10:00:27 ist173639 Exp $ */
+/* $Id: pwn_scanner.l,v 1.8 2015/05/20 08:04:53 ist176031 Exp $ */
 // make relevant includes before including the parser's tab file
 #include <string>
 #include <cdk/ast/sequence_node.h>
@@ -15,12 +15,13 @@
 %x X_STRING X_COMMENT
 %%
 
-		      {set_debug(1);}
+		      
 
 ">="                    return tGE; 
 "<="                    return tLE; 
 "=="                    return tEQ; 
-"<>"                    return tNE; 
+"<>"                    return tNE;
+"++"			return tINC;
 
 "if"                    return tIF; 
 "else"                  return tELSE; 

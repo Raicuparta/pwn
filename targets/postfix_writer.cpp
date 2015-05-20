@@ -1,4 +1,4 @@
-// $Id: postfix_writer.cpp,v 1.7 2015/04/14 10:00:27 ist173639 Exp $ -*- c++ -*-
+// $Id: postfix_writer.cpp,v 1.11 2015/05/20 08:04:53 ist176031 Exp $ -*- c++ -*-
 #include <string>
 #include <string.h>
 #include <sstream>
@@ -33,7 +33,7 @@ void pwn::postfix_writer::do_integer_node(cdk::integer_node * const node, int lv
 
 void pwn::postfix_writer::do_string_node(cdk::string_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
-	std::cout<<"--------------STRING NODE ----------------" <<std::endl;
+	
 	
 	bool constant = _seg == 'R';
 	int label = ++_lbl;
@@ -53,7 +53,7 @@ void pwn::postfix_writer::do_string_node(cdk::string_node * const node, int lvl)
 	} else {
 		if (constant) {
 			_const_label = label;
-			std::cout<<"--------------THE CONST LABEL 2 -> " << _const_label <<std::endl;
+			
 		}
 		else {
 			goToSegment(_prev_seg);
@@ -156,7 +156,7 @@ void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, 
 
 void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int lvl) {
 	
-	std::cout << "------ DEF -------" << std::endl;
+	
 	CHECK_TYPES(_compiler, _symtab, node);
 	_prev_seg = _seg;
 	_seg = 'T';
@@ -193,14 +193,14 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
 	
 
 	
-	if(node->name()->arguments() != NULL) { std::cout<<"--------------ARGS----------------"<<std::endl;
-						node->name()->arguments()->accept(this, lvl); //argumentos da funcao
+	if(node->name()->arguments() != NULL) { 
+		node->name()->arguments()->accept(this, lvl); //argumentos da funcao
 	}
-	if(node->instructions() != NULL) { std::cout<<"--------------Intres----------------"<<std::endl;
-																							node->instructions()->accept(this, lvl); //corpo da funcao
+	if(node->instructions() != NULL) { 
+		node->instructions()->accept(this, lvl); //corpo da funcao
 	}
-	if(node->value() != NULL)  { std::cout<<"--------------Vales----------------"<<std::endl;
-						node->value()->accept(this, lvl); //retorno por omissao da funcao
+	if(node->value() != NULL)  { 
+		node->value()->accept(this, lvl); //retorno por omissao da funcao
 	}
 
 	_in_function = false;
@@ -232,22 +232,19 @@ void pwn::postfix_writer::do_evaluation_node(pwn::evaluation_node * const node, 
 }
 
 void pwn::postfix_writer::do_print_node(pwn::print_node * const node, int lvl) {
-	std::cout<<"--------------PRINT NOODE ----------------" <<std::endl;
 	CHECK_TYPES(_compiler, _symtab, node);
 	node->argument()->accept(this, lvl); // determine the value to print
 	
 	if(isLeftValue(node->argument())) {
-		std::cout<<"--------------PRINT THE LVALUE ----------------" <<std::endl;
+		
 		_pf.LOAD();
 	}
 	
 	if (node->argument()->type()->name() == basic_type::TYPE_INT) {
-		std::cout<<"--------------PRINT THE INT ----------------" <<std::endl;
 		_pf.CALL("printi");
 		_pf.TRASH(4); // delete the printed value
 	}
 	else if (node->argument()->type()->name() == basic_type::TYPE_STRING) {
-		std::cout<<"--------------PRINT THE STRING ----------------" <<std::endl;
 		_pf.CALL("prints");
 		_pf.TRASH(4); // delete the printed value's address
 	}
@@ -396,6 +393,16 @@ void pwn::postfix_writer::do_identity_node(pwn::identity_node * const node, int 
 	CHECK_TYPES(_compiler, _symtab, node);
 	node->argument()->accept(this, lvl+2);
 }
+void pwn::postfix_writer::do_inc_node(pwn::inc_node * const node, int lvl) {
+	CHECK_TYPES(_compiler, _symtab, node);
+	node->argument()->accept(this, lvl+2);
+	_pf.LOAD();
+	_pf.DUP();
+	_pf.INT(1);
+	_pf.ADD();
+	node->argument()->accept(this, lvl+2);
+	_pf.STORE();
+}
 void pwn::postfix_writer::do_next_node(pwn::next_node * const node, int lvl) {
 	if (node->value() < (int)_nexts.size())
 		_pf.JMP(_nexts[_nexts.size() - node->value()]);
@@ -428,10 +435,7 @@ void pwn::postfix_writer::do_block_node(pwn::block_node * const node, int lvl) {
 }
 void pwn::postfix_writer::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
-	std::cout << "------ DECL -------" << std::endl;
-	
-	
-	
+		
 	std::string * name = node->name(); //nome da funcao
 	const std::string &cName = *name;
 	if(cName == "pwn"){
@@ -482,15 +486,11 @@ void pwn::postfix_writer::do_var_node(pwn::var_node * const node, int lvl) {
 	const std::string &id = *node->var();
 	std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
 	
-	std::cout<<"--------------VAR NODE PF ----------------" << symbol->type()->name() <<std::endl;
-	
 	if(symbol->value() == 0) { //Local Variable
 		_pf.LOCAL(symbol->offset());
-		std::cout<<"--------------OFFFFSETTTTTTTT ----------------" << symbol->offset() <<std::endl;
 		
 		
 	} else if (symbol->value() == -1) { // Global variable
-		std::cout<<"--------------ADDR ----------------" << *node->var() <<std::endl;
 		_pf.ADDR(symbol->glabel());
 		//_pf.LOAD();
 	}
@@ -502,8 +502,6 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 	CHECK_TYPES(_compiler, _symtab, node);
 	node->var()->accept(this, lvl);
 	
-	std::cout<<"--------------VAR DECL PF ----------------" << node->type()->name() <<std::endl; 
-	
 	std::string * qualifier = node->qualifier();
 	const std::string &qual = * qualifier;
 	if (qual == "import") { //TODO remove this
@@ -513,7 +511,6 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 	
 	const std::string &id = *node->var()->var();
 	std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
-	std::cout<<"--------------VAR DECL SYM PF ----------------" << symbol->type()->name() <<std::endl;
 	
 	if (_in_function) { //Local Variable
 
@@ -532,7 +529,6 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 		symbol->glabel(label);
 		
 		if(node->assignment() == nullptr) {
-			std::cout<<"--------------GLOBAL LABEL WITHOUT ASSIGN ----------------" << *node->var()->var() <<std::endl;
 			_prev_seg = _seg;
 			_seg = 'B';
 			_pf.BSS();
@@ -540,7 +536,6 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 			_pf.LABEL(label);
 			_pf.BYTE(node->type()->size());
 		} else if(!node->isConst()) {
-			std::cout<<"--------------GLOBAL LABEL WITH ASSIGN ----------------" << *node->var()->var() <<std::endl;
 			_prev_seg = _seg;
 			_seg = 'D';
 			_pf.DATA();
@@ -567,7 +562,6 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 				_pf.RODATA();
 				_pf.ALIGN();
 				_pf.LABEL(label);
-				std::cout<<"--------------THE CONST LABEL 1 -> " << _const_label <<std::endl;
 				_pf.ID(mklbl(_const_label));
 			}
 			
@@ -577,7 +571,6 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 }
 
 void pwn::postfix_writer::do_println_node(pwn::println_node * const node, int lvl) {
-	std::cout<<"--------------PRINTLN----------------"<<std::endl;
 	CHECK_TYPES(_compiler, _symtab, node);
 	node->argument()->accept(this, lvl); // determine the value to print
 	
