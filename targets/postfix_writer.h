@@ -46,10 +46,12 @@ namespace pwn {
       return oss.str();
     }
    
+   int _const_label;
   char _prev_seg = 'T'; //TEXT
 	char _seg = 'T'; //TEXT
 	
 	void goToSegment(char seg) {
+		_seg = seg;
 		if (seg == 'T') _pf.TEXT(); 				//TEXT
 		else if (seg == 'D') _pf.DATA();		//DATA
 		else if (seg == 'B') _pf.BSS();			//BSS

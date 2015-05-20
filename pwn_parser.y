@@ -89,6 +89,8 @@ decl : vardecl ';' 						{ $$ = $1; }
 		
 vardecl : qualifier type var %prec LOWER_THAN_ELSE		{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1, nullptr); }
 	| qualifier type var '=' expr				{ $$ = new pwn::var_decl_node(LINE, $3, $2, $1, new pwn::assignment_node(LINE, $3, $5));}
+	| qualifier '<' type '>' var %prec LOWER_THAN_ELSE		{ pwn::var_decl_node *n = new pwn::var_decl_node(LINE, $5, $3, $1, nullptr); n->setConst(); $$ = n; }
+	| qualifier '<' type '>' var '=' expr				{ pwn::var_decl_node *n = new pwn::var_decl_node(LINE, $5, $3, $1, new pwn::assignment_node(LINE, $5, $7)); n->setConst(); $$ = n;}
 	;
 
 funcdecl : func %prec LOWER_THAN_ELSE			{ $$ = new pwn::func_def_node(LINE, $1, nullptr, nullptr); }
@@ -111,6 +113,8 @@ var :  tIDENTIFIER %prec LOWER_THAN_ELSE			{ $$ = new pwn::var_node(LINE, $1); }
 		
 func : qualifier type tIDENTIFIER '(' ')'					{ $$ = new pwn::func_decl_node(LINE, $3, $2, nullptr, $1); }
      | qualifier type tIDENTIFIER 	'(' argsdecl ')'		{ $$ = new pwn::func_decl_node(LINE, $3, $2, $5, $1); }
+     | qualifier '<' type '>' tIDENTIFIER '(' ')'					{ pwn::func_decl_node *n = new pwn::func_decl_node(LINE, $5, $3, nullptr, $1); n->setConst(); $$ = n;}
+     | qualifier '<' type '>' tIDENTIFIER 	'(' argsdecl ')'		{ pwn::func_decl_node *n = new pwn::func_decl_node(LINE, $5, $3, $7, $1); n->setConst(); $$ = n;}
      | qualifier '!' tIDENTIFIER '(' ')'					{ $$ = new pwn::func_decl_node(LINE, $3, new basic_type(4, basic_type::TYPE_VOID), nullptr, $1); }
      | qualifier '!' tIDENTIFIER 	'(' argsdecl ')'			{ $$ = new pwn::func_decl_node(LINE, $3, new basic_type(4, basic_type::TYPE_VOID), $5, $1); }
      ;
@@ -131,11 +135,6 @@ type : '#'							{ $$ = new basic_type(4, basic_type::TYPE_INT);  }
      |'%'							{ $$ = new basic_type(8, basic_type::TYPE_DOUBLE); }
      |'$'							{ $$ = new basic_type(4, basic_type::TYPE_STRING); }
      |'*'							{ $$ = new basic_type(4, basic_type::TYPE_POINTER); }
-     //TODO CONST TYPES
-     |"<#>"							{ $$ = new basic_type(4, basic_type::TYPE_INT); }
-     |"<%>"							{ $$ = new basic_type(8, basic_type::TYPE_DOUBLE); }
-     |"<$>"							{ $$ = new basic_type(4, basic_type::TYPE_STRING); }
-     |"<*>"							{ $$ = new basic_type(4, basic_type::TYPE_POINTER); }
      ;
 		
 		

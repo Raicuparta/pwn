@@ -32,21 +32,35 @@ void pwn::postfix_writer::do_integer_node(cdk::integer_node * const node, int lv
 }
 
 void pwn::postfix_writer::do_string_node(cdk::string_node * const node, int lvl) {
-	int lbl1 = ++_lbl;
+	CHECK_TYPES(_compiler, _symtab, node);
 	std::cout<<"--------------STRING NODE ----------------" <<std::endl;
+	
+	bool constant = _seg == 'R';
+	int label = ++_lbl;
+	
 	/* generate the string */
 	_prev_seg = _seg;
 	_seg = 'R';
 	_pf.RODATA(); // strings are DATA readonly
 	_pf.ALIGN(); // make sure we are aligned
-	_pf.LABEL(mklbl(lbl1)); // give the string a name
+	_pf.LABEL(mklbl(label)); // give the string a name
 	_pf.STR(node->value()); // output string characters
 	
-	goToSegment(_prev_seg);
-	_prev_seg = _seg;
-	
-	if (_in_function) _pf.ADDR(mklbl(lbl1));
-	else _pf.ID(mklbl(lbl1));
+	if (_in_function) {
+		goToSegment(_prev_seg);
+		//_prev_seg = _seg;
+		_pf.ADDR(mklbl(label));
+	} else {
+		if (constant) {
+			_const_label = label;
+			std::cout<<"--------------THE CONST LABEL 2 -> " << _const_label <<std::endl;
+		}
+		else {
+			goToSegment(_prev_seg);
+			//_prev_seg = _seg;
+			_pf.ID(mklbl(label));
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -153,6 +167,11 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
 	const std::string &cName = *name;
 	if(cName == "pwn"){
 		name = new std::string("_main");
+		// these are just a few library function imports
+		_pf.EXTERN("readi");
+		_pf.EXTERN("printi");
+		_pf.EXTERN("prints");
+		_pf.EXTERN("println");
 		
 	}
 	else if(cName == "_main"){
@@ -166,16 +185,12 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
 	_symtab.push();
 	_in_function = true;
 	
-	_pf.GLOBAL(sName, _pf.FUNC());
 	_pf.ALIGN();
+	_pf.GLOBAL(sName, _pf.FUNC());
 	_pf.LABEL(sName);
 	_pf.ENTER(sc.size());  // Simple doesn't implement local variables
 	
-	// these are just a few library function imports
-	_pf.EXTERN("readi");
-	_pf.EXTERN("printi");
-	_pf.EXTERN("prints");
-	_pf.EXTERN("println");
+
 	
 	if(node->name()->arguments() != NULL) { std::cout<<"--------------ARGS----------------"<<std::endl;
 						node->name()->arguments()->accept(this, lvl); //argumentos da funcao
@@ -478,7 +493,7 @@ void pwn::postfix_writer::do_var_node(pwn::var_node * const node, int lvl) {
 		
 	} else if (symbol->value() == -1) { // Global variable
 		std::cout<<"--------------ADDR ----------------" << *node->var() <<std::endl;
-		_pf.ADDR(*node->var());
+		_pf.ADDR(symbol->glabel());
 		//_pf.LOAD();
 	}
 	
@@ -513,23 +528,50 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 		//na->accept(this, lvl+1);
 		
 	} else if (symbol->value() == -1) { // Global variable
+
+		//no qualifier means public
+		std::string label = (*node->qualifier() == "public")? *node->var()->var() : mklbl(++_lbl);
+		symbol->glabel(label);
+		
 		if(node->assignment() == nullptr) {
 			std::cout<<"--------------GLOBAL LABEL WITHOUT ASSIGN ----------------" << *node->var()->var() <<std::endl;
 			_prev_seg = _seg;
 			_seg = 'B';
 			_pf.BSS();
 			_pf.ALIGN();
-			_pf.LABEL(*node->var()->var());
+			_pf.LABEL(label);
 			_pf.BYTE(node->type()->size());
-		} else {
+		} else if(!node->isConst()) {
 			std::cout<<"--------------GLOBAL LABEL WITH ASSIGN ----------------" << *node->var()->var() <<std::endl;
 			_prev_seg = _seg;
 			_seg = 'D';
 			_pf.DATA();
 			_pf.ALIGN();
-			_pf.LABEL(*node->var()->var());	
+			_pf.LABEL(label);	
 			
 			node->assignment()->accept(this, lvl+1);
+			
+		} else {
+			_prev_seg = _seg;
+			_seg = 'R';
+			_pf.RODATA();
+			
+			if (node->type()->name() == basic_type::TYPE_INT) {
+				_pf.ALIGN();
+				_pf.LABEL(label);
+			}
+			
+			node->assignment()->accept(this, lvl+1);
+			
+			if (node->type()->name() != basic_type::TYPE_INT) {
+				_prev_seg = _seg;
+				_seg = 'R';
+				_pf.RODATA();
+				_pf.ALIGN();
+				_pf.LABEL(label);
+				std::cout<<"--------------THE CONST LABEL 1 -> " << _const_label <<std::endl;
+				_pf.ID(mklbl(_const_label));
+			}
 			
 		}
 		

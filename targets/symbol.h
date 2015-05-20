@@ -11,7 +11,8 @@ namespace pwn {
       basic_type *_type;
       std::string _name;
       long _value; // hack!
-      int _offset;
+      int _offset; //used only by local variables
+			std::string _glabel; //used only by global variables
 
     public:
       inline symbol( basic_type *type, const std::string &name, long value) :
@@ -21,6 +22,14 @@ namespace pwn {
       virtual ~symbol() {
         delete _type;
       }
+      
+      inline std::string glabel() {
+				return _glabel;
+			}
+			
+			inline void glabel(const std::string &glabel) {
+				_glabel = glabel;
+			}
 
       inline basic_type *type() const {
         return _type;
