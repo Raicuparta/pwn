@@ -9,6 +9,7 @@ namespace pwn {
     var_node * _name;
 		std::string *_qualifier;
 		pwn::assignment_node * _assignment;
+		bool _const = false;
     
   public:
     inline var_decl_node(int lineno,  var_node * name,  basic_type *type, std::string * qualifier, pwn::assignment_node * assignment) :
@@ -21,6 +22,14 @@ namespace pwn {
     inline var_node *var() {
       return _name;
     }
+    
+    inline bool isConst() {
+			return _const;
+		}
+		
+		inline void setConst() {
+			_const = true;
+		}
     
 		inline pwn::assignment_node *  assignment() {
       return _assignment;

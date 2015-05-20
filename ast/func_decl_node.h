@@ -10,6 +10,7 @@ namespace pwn {
     basic_type *_type;
     cdk::sequence_node *_arguments;
     std::string * _qualifier;
+    bool _const = false;
 		
   public:
     inline func_decl_node(int lineno,  std::string  * name,  basic_type *type, cdk::sequence_node *arguments, std::string * qualifier) :
@@ -20,6 +21,14 @@ namespace pwn {
     inline std::string  *name() {
       return _name;
     }
+    
+    inline bool isConst() {
+		    return _const;
+	    }
+	    
+	    inline void setConst() {
+		    _const = true;
+	    }
     inline basic_type *type() {
       return _type;
     }

@@ -32,17 +32,21 @@ void pwn::postfix_writer::do_integer_node(cdk::integer_node * const node, int lv
 }
 
 void pwn::postfix_writer::do_string_node(cdk::string_node * const node, int lvl) {
-	int lbl1;
-	
+	int lbl1 = ++_lbl;
+	std::cout<<"--------------STRING NODE ----------------" <<std::endl;
 	/* generate the string */
+	_prev_seg = _seg;
+	_seg = 'R';
 	_pf.RODATA(); // strings are DATA readonly
 	_pf.ALIGN(); // make sure we are aligned
-	_pf.LABEL(mklbl(lbl1 = ++_lbl)); // give the string a name
+	_pf.LABEL(mklbl(lbl1)); // give the string a name
 	_pf.STR(node->value()); // output string characters
 	
-	/* leave the address on the stack */
-	_pf.TEXT(); // return to the TEXT segment
-	_pf.ADDR(mklbl(lbl1)); // the string to be printed
+	goToSegment(_prev_seg);
+	_prev_seg = _seg;
+	
+	if (_in_function) _pf.ADDR(mklbl(lbl1));
+	else _pf.ID(mklbl(lbl1));
 }
 
 //---------------------------------------------------------------------------
@@ -50,7 +54,10 @@ void pwn::postfix_writer::do_string_node(cdk::string_node * const node, int lvl)
 void pwn::postfix_writer::do_neg_node(cdk::neg_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
 	node->argument()->accept(this, lvl); // determine the value
-	_pf.NEG(); // 2-complement
+	if (isLeftValue(node->argument())) {
+		_pf.LOAD();
+	}
+	_pf.NEG();
 }
 
 //---------------------------------------------------------------------------
@@ -58,8 +65,11 @@ void pwn::postfix_writer::do_neg_node(cdk::neg_node * const node, int lvl) {
 inline void pwn::postfix_writer::processBinaryExpression(cdk::binary_expression_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
 	node->left()->accept(this, lvl);
+	if (isLeftValue(node->left())) {
+		_pf.LOAD();
+	}
 	node->right()->accept(this, lvl);
-	if (isLeftValue(node)) {
+	if (isLeftValue(node->right())) {
 		_pf.LOAD();
 	}
 }
@@ -121,16 +131,7 @@ void pwn::postfix_writer::do_rvalue_node(pwn::rvalue_node * const node, int lvl)
 
 void pwn::postfix_writer::do_assignment_node(pwn::assignment_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
-	
-	std::cout<<"--------------ASSIGN----------------"<<std::endl;
-	
-	if(node->rvalue()->name() == "var_decl_node"){
-			std::cout<<"--------------FODASSSSSSSSSSSSEEEEEEEEEEEEEEEE----------------"<<std::endl;
 
-		pwn::var_decl_node* vdn = (pwn::var_decl_node*) node->rvalue();
-		vdn->var()->accept(this, lvl);
-	}
-	else
 		node->rvalue()->accept(this, lvl); // determine the new value
 	_pf.DUP();
 	node->lvalue()->accept(this, lvl); // where to store the value
@@ -143,7 +144,8 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
 	
 	std::cout << "------ DEF -------" << std::endl;
 	CHECK_TYPES(_compiler, _symtab, node);
-	
+	_prev_seg = _seg;
+	_seg = 'T';
 	_pf.TEXT();
 	
 	
@@ -336,15 +338,41 @@ void pwn::postfix_writer::do_stop_node(pwn::stop_node * const node, int lvl) {
 }
 void pwn::postfix_writer::do_and_node(pwn::and_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
+	
 	node->left()->accept(this, lvl);
+	if (isLeftValue(node->left())) _pf.LOAD();
+	
+	int label = ++_lbl;
+	
+	_pf.DUP();
+	_pf.JZ(mklbl(label));
+			
 	node->right()->accept(this, lvl);
+	if (isLeftValue(node->right())) _pf.LOAD();
+			
 	_pf.AND();
+	
+	_pf.ALIGN();
+	_pf.LABEL(mklbl(label));
 }
 void pwn::postfix_writer::do_or_node(pwn::or_node * const node, int lvl) {
 	CHECK_TYPES(_compiler, _symtab, node);
+	
 	node->left()->accept(this, lvl);
+	if (isLeftValue(node->left())) _pf.LOAD();
+	
+	int label = ++_lbl;
+	
+	_pf.DUP();
+	_pf.JNZ(mklbl(label));
+	
 	node->right()->accept(this, lvl);
+	if (isLeftValue(node->right())) _pf.LOAD();
+	
 	_pf.OR();
+	
+	_pf.ALIGN();
+	_pf.LABEL(mklbl(label));
 }
 void pwn::postfix_writer::do_return_node(pwn::return_node * const node, int lvl) {
 	_pf.POP();
@@ -487,14 +515,16 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 	} else if (symbol->value() == -1) { // Global variable
 		if(node->assignment() == nullptr) {
 			std::cout<<"--------------GLOBAL LABEL WITHOUT ASSIGN ----------------" << *node->var()->var() <<std::endl;
-
+			_prev_seg = _seg;
+			_seg = 'B';
 			_pf.BSS();
 			_pf.ALIGN();
 			_pf.LABEL(*node->var()->var());
 			_pf.BYTE(node->type()->size());
 		} else {
 			std::cout<<"--------------GLOBAL LABEL WITH ASSIGN ----------------" << *node->var()->var() <<std::endl;
-
+			_prev_seg = _seg;
+			_seg = 'D';
 			_pf.DATA();
 			_pf.ALIGN();
 			_pf.LABEL(*node->var()->var());	

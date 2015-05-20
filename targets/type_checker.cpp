@@ -207,6 +207,7 @@ void pwn::type_checker::do_assignment_node(pwn::assignment_node * const node, in
     throw std::string("incompatible types in assignment");
   
   node->type(node->lvalue()->type());
+	
 }
 
 //---------------------------------------------------------------------------
@@ -349,7 +350,7 @@ void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lv
     if (!_symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)))
 			//throw id + " redeclared";
 		
-  basic_type *type = node->type();
+  
   //node->var()->type(type);
 	//node->var()->accept(this, lvl+2);
 	std::cout<<"--------------INSERTING VAR DO QUE TA LA DENTRO DECL----------------" << node->var()->type() <<std::endl;

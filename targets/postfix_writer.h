@@ -45,7 +45,16 @@ namespace pwn {
         oss << "_L" << lbl;
       return oss.str();
     }
-
+   
+  char _prev_seg = 'T'; //TEXT
+	char _seg = 'T'; //TEXT
+	
+	void goToSegment(char seg) {
+		if (seg == 'T') _pf.TEXT(); 				//TEXT
+		else if (seg == 'D') _pf.DATA();		//DATA
+		else if (seg == 'B') _pf.BSS();			//BSS
+		else if (seg == 'R') _pf.RODATA();	//RODATA
+	}
     
   public:
     void do_sequence_node(cdk::sequence_node * const node, int lvl);
