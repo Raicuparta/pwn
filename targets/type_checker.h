@@ -16,6 +16,7 @@ namespace pwn {
    */
   class type_checker: public basic_ast_visitor {
     cdk::symbol_table<pwn::symbol> &_symtab;
+		bool _in_function = false;
 
   public:
     type_checker(std::shared_ptr<cdk::compiler> compiler, cdk::symbol_table<pwn::symbol> &symtab) :

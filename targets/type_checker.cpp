@@ -296,9 +296,7 @@ void pwn::type_checker::do_block_node(pwn::block_node * const node, int lvl) {
 void pwn::type_checker::do_func_decl_node(pwn::func_decl_node * const node, int lvl) {
 	//ASSERT_UNSPEC;
 	int val = -1;
-	std::string * qualifier = node->qualifier();
-  const std::string &qual = *qualifier;
-	if (qual == "local") {
+	if (_in_function) {
 		val = 0;
 	}
   const std::string &id = *node->name();
@@ -308,6 +306,7 @@ void pwn::type_checker::do_func_decl_node(pwn::func_decl_node * const node, int 
 
 void pwn::type_checker::do_func_def_node(pwn::func_def_node * const node, int lvl) {
   ASSERT_UNSPEC;
+	_in_function = true;
 	node->name()->accept(this, lvl);
   const std::string &id = *node->name()->name();
   std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
@@ -315,6 +314,7 @@ void pwn::type_checker::do_func_def_node(pwn::func_def_node * const node, int lv
   basic_type *type = symbol->type();
   node->type(type);
   node->instructions()->accept(this, lvl + 2);
+	_in_function = false;
 }
 void pwn::type_checker::do_func_call_node(pwn::func_call_node * const node, int lvl) {
   //ASSERT_UNSPEC;
@@ -338,14 +338,12 @@ void pwn::type_checker::do_var_node(pwn::var_node * const node, int lvl) {
 void pwn::type_checker::do_var_decl_node(pwn::var_decl_node * const node, int lvl) {
   //ASSERT_UNSPEC;
 	int val = -1;
-	std::string * qualifier = node->qualifier();
-  const std::string &qual = * qualifier;
-	if (qual == "local"){
+	if (_in_function){
 		val = 0;
 	}
 	
   const std::string &id = *node->var()->var();
-		std::cout<<"--------------INSERTING VAR DECL----------------" << node->type()->name() <<std::endl;
+		std::cout<<"--------------INSERTING VAR DECL----------------" << val <<std::endl;
 		// put in the symbol table
     if (!_symtab.insert(id, std::make_shared<pwn::symbol>(node->type(), id, val)))
 			//throw id + " redeclared";

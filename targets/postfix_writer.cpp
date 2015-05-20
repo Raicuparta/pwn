@@ -184,6 +184,7 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
 	
 	_symtab.push();
 	_in_function = true;
+	_offset_vars = 0;
 	
 	_pf.ALIGN();
 	_pf.GLOBAL(sName, _pf.FUNC());
@@ -201,10 +202,7 @@ void pwn::postfix_writer::do_func_def_node(pwn::func_def_node * const node, int 
 	if(node->value() != NULL)  { std::cout<<"--------------Vales----------------"<<std::endl;
 						node->value()->accept(this, lvl); //retorno por omissao da funcao
 	}
-	// end the main function
-	
-	
-	
+
 	_in_function = false;
 	
 	_pf.INT(0);
@@ -316,7 +314,7 @@ void pwn::postfix_writer::do_repeat_node(pwn::repeat_node * const node, int lvl)
 	_stops.push_back(label_end);
 	_nexts.push_back(label_after);
 	
-	_symtab.push();
+	//_symtab.push();
 	
 	node->before()->accept(this, lvl+2);
 	
@@ -341,7 +339,7 @@ void pwn::postfix_writer::do_repeat_node(pwn::repeat_node * const node, int lvl)
 	_stops.pop_back();
 	_nexts.pop_back();
 	
-	_symtab.pop();
+	//_symtab.pop();
 	
 }
 void pwn::postfix_writer::do_stop_node(pwn::stop_node * const node, int lvl) {
@@ -517,7 +515,7 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 	std::shared_ptr<pwn::symbol> symbol = _symtab.find(id);
 	std::cout<<"--------------VAR DECL SYM PF ----------------" << symbol->type()->name() <<std::endl;
 	
-	if (symbol->value() == 0) { //Local Variable
+	if (_in_function) { //Local Variable
 
 		_offset_vars -= symbol->type()->size();
 		symbol->offset(_offset_vars);
@@ -527,7 +525,7 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 		//pwn::assignment_node* na = new pwn::assignment_node(node->lineno(), node->var(), node->assignment());
 		//na->accept(this, lvl+1);
 		
-	} else if (symbol->value() == -1) { // Global variable
+	} else { // Global variable
 
 		//no qualifier means public
 		std::string label = (*node->qualifier() == "public")? *node->var()->var() : mklbl(++_lbl);
@@ -575,9 +573,6 @@ void pwn::postfix_writer::do_var_decl_node(pwn::var_decl_node * const node, int 
 			
 		}
 		
-		
-		
-		
 	}
 }
 
@@ -585,6 +580,9 @@ void pwn::postfix_writer::do_println_node(pwn::println_node * const node, int lv
 	std::cout<<"--------------PRINTLN----------------"<<std::endl;
 	CHECK_TYPES(_compiler, _symtab, node);
 	node->argument()->accept(this, lvl); // determine the value to print
+	
+	if(isLeftValue(node->argument())) _pf.LOAD();
+	
 	if (node->argument()->type()->name() == basic_type::TYPE_INT) {
 		_pf.CALL("printi");
 		_pf.TRASH(4); // delete the printed value
